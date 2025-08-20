@@ -22,3 +22,5 @@ RUN find ${JEUS_HOME} -type d -exec chmod 700 {} \; && \
 
 WORKDIR ${USER_HOME}
 USER kior
+
+ENTRYPOINT ["start.sh"]

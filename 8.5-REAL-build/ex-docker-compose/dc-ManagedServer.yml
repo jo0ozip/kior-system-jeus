@@ -1,18 +1,17 @@
 services:
   node01:
-    image: tmaxsoft-jeus:v8.5
-    pull_policy: always
-    container_name: jeus-node01
-    hostname: jeus-node01
-    entrypoint: ["${JEUS_HOME}/bin/nmboot.sh"] #DEV
-    #entrypoint: ["${JEUS_HOME}/bin/msboot.sh"] #OP
+    image: app-test:latest
+    #pull_policy: always
+    #entrypoint: ["start.sh"]
+    container_name: ManagedServer
+    hostname: ManagedServer
     platform: linux/amd64
     privileged: true
     stdin_open: true
     tty: true
     cpus: "4.0"
     volumes:
-      - ../LOG/node01:${JEUS_HOME}/logs:rw   # ← volumes 키 추가
+      - ../LOG/ManagedServer:${JEUS_HOME}/logs:rw   # ← volumes 키 추가
     networks:
       - tmaxsoft-network
     restart: unless-stopped
