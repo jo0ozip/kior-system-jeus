@@ -1,0 +1,27 @@
+#=============================================================================
+# [Property File Template For External Resource Setup]
+# The extenal resource is generally a database.
+# You can set properties of databases on this file.
+# Note that JDBC drivers shall be located in the JEUS_HOME/lib/datasource.
+#=============================================================================
+
+#
+#For EJB Timer Database
+#
+ejb-timer.db.vendor=derby
+ejb-timer.db.driver=org.apache.derby.jdbc.ClientDriver
+ejb-timer.db.url=jdbc:derby://localhost:1527/dbname;create=true
+ejb-timer.db.userid=timer
+ejb-timer.db.password=timer
+
+#ejb-timer.db.vendor=oracle
+#ejb-timer.db.driver=oracle.jdbc.driver.OracleDriver
+#ejb-timer.db.url=jdbc:oracle:thin:@localhost:1521:dbname
+#ejb-timer.db.userid=timer
+#ejb-timer.db.password=timer
+
+#ejb-timer.db.vendor=db2
+#ejb-timer.db.driver=com.ibm.db2.jcc.DB2Driver
+#ejb-timer.db.url=jdbc:db2://localhost:50000/dbname
+#ejb-timer.db.userid=timer
+#ejb-timer.db.password=timer

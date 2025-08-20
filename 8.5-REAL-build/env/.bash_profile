@@ -1,25 +1,25 @@
 #=============================================================
-# COMMON ENV                                         @TmaxSoft
+# COMMON ENV                                      @kior-system
 #=============================================================
 umask 077
 EDITOR=vi
 export EDITOR
 set -o vi
 export PS1="[\$LOGNAME@`hostname`:\$PWD]$ "
-export JAVA_HOME=/sw/java
+export JAVA_HOME=${JAVA_HOME}
 export PATH=$JAVA_HOME/bin:$PATH
 #=============================================================
-# JEUS ENV                                           @TmaxSoft
+# JEUS ENV                                        @kior-system
 #=============================================================
-export JEUS_HOME=/sw/jeus
-export JEUS_LOG_HOME=${JEUS_HOME}/logs
+export JEUS_HOME=${JEUS_HOME}
+export JEUS_LOG_HOME=${JEUS_LOG_HOME}
 export PATH="${PATH}:${JEUS_HOME}/bin:${JEUS_HOME}/lib/system"
 #export PATH="${PATH}:${JEUS_HOME}/webserver/bin"
 #=============================================================
-# JEUS DomainAdminServer Set                         @TmaxSoft
+# JEUS DomainAdminServer Set                      @kior-system
 #=============================================================
-export DOMAIN_NAME=khis_domain
-export DAS_HOSTNAME=jeus-admin
+export DOMAIN_NAME=${DOMAIN_NAME}
+export DAS_HOSTNAME=`hostname`
 export DAS_PORT=10000
 export DAS_URL=${DAS_HOSTNAME}:${DAS_PORT}
 export ENCODE_FILE=${JEUS_HOME}/bin/jeusEncode
@@ -31,7 +31,6 @@ alias jcfg='cd ${JEUS_HOME}/domains/${DOMAIN_NAME}/config'
 alias jbin='cd ${JEUS_HOME}/bin'
 alias jlog='cd ${JEUS_LOG_HOME}'
 alias pp='ps -ef | grep '
-alias vi='vim'
 
 # JDK 8 
 #-Xms2048m -Xmx2048m
@@ -53,5 +52,14 @@ alias vi='vim'
 #-verbose:gc 
 #-XX:+UseG1GC
 #-Xlog:gc:file=${JEUS_LOG_HOME}/gclog/MS_NAME_gc.log:time,pid,level,tags
+
+# JDK 17
+#-Xms2048m -Xmx2048m
+#-XX:MetaspaceSize=256m
+#-XX:MaxMetaspaceSize=512m
+#-Xlog:gc*:file=${JEUS_LOG_HOME}/gclog/MS_NAME_gc.log:time,uptime,level,tags:filecount=10,filesize=20m
+#-XX:+HeapDumpOnOutOfMemoryError
+#-XX:HeapDumpPath=${JEUS_LOG_HOME}/dump/
+#-XX:+ExitOnOutOfMemoryError       # OOM 시 프로세스 즉시 종료 (선택)
 #-XX:+HeapDumpOnOutOfMemoryError
 #-XX:HeapDumpPath=${JEUS_LOG_HOME}/dump/

@@ -1,1 +1,0 @@
-require(["jquery"],function(e){return e("#mainMenu li ul").siblings(".menu").click(function(t){var n;return t.preventDefault(),n=e(this).parent(),n.hasClass("on")?n.removeClass("on"):n.addClass("on").siblings("li").not(":has(.active)").removeClass("on")})});

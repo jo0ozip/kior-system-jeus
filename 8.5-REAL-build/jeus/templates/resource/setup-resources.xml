@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+
+<project name="setup-external-resources" default="usage" basedir=".">
+    <property name="ext-resources-props" value="external-resources.properties"/>
+    <property file="${ext-resources-props}"/>
+
+    <macrodef name="execute-sql-file" description="Execute a SQL file">
+        <attribute name="driver"/>
+        <attribute name="url"/>
+        <attribute name="userid"/>
+        <attribute name="password"/>
+        <attribute name="src"/>
+        <attribute name="classpathref"/>
+        <attribute name="onerror" default="continue"/>
+
+        <sequential>
+            <echo message="Executing SQL file src=@{src}"/>
+            <sql
+                driver="@{driver}"
+                url="@{url}"
+                userid="@{userid}"
+                password="@{password}"
+                src="@{src}"
+                classpathref="@{classpathref}"
+                onerror="@{onerror}"
+                print="yes"
+                />
+        </sequential>
+    </macrodef>
+
+    <!-- driver class library is located in the JEUS_HOME/lib/datasource -->
+    <path id="jeus.ejbtimer.classpath">
+        <fileset dir="../../lib/datasource">
+            <include name="*.jar"/>
+            <include name="*.zip"/>
+        </fileset>
+    </path>
+
+    <!-- TODO: description! -->
+    <target name="usage" description="show usage">
+        <echo>
+If you want to setup external resources like creating tables, please execute following lines :
+$ ant -f setup-resources.xml setup
+Or if you want to drop tables, please execute following lines :
+$ ant -f setup-resources.xml unsetup
+        </echo>
+    </target>
+
+    <target name="setup" description="setup external resources configured by ${ext-resources-props}">
+        <execute-sql-file
+            driver="${ejb-timer.db.driver}" url="${ejb-timer.db.url}" 
+            userid="${ejb-timer.db.userid}" password="${ejb-timer.db.password}"
+            classpathref="jeus.ejbtimer.classpath"
+            src=".timersql/create-table-${ejb-timer.db.vendor}.sql" />
+    </target>
+
+    <target name="unsetup" description="unsetup external resources configured by ${ext-resources-props}">
+        <execute-sql-file
+            driver="${ejb-timer.db.driver}" url="${ejb-timer.db.url}" 
+            userid="${ejb-timer.db.userid}" password="${ejb-timer.db.password}"
+            classpathref="jeus.ejbtimer.classpath"
+            src=".timersql/drop-table.sql" />
+    </target>
+</project>

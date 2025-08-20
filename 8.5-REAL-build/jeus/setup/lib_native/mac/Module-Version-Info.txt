@@ -1,0 +1,8 @@
+# Darwin Mac OS X 10.4
+# Mach-O Universal Binary for ppc, i386 and x86_64
+CUtility 1_0_2
+NSStream 1_0_0
+Runner   1_0_0
+JeusNet  1_0_2
+cpumon   N/A
+sigar    1_6_4

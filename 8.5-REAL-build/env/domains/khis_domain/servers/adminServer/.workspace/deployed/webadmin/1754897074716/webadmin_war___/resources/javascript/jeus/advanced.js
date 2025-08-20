@@ -1,1 +1,0 @@
-require(["jquery","bundle","jeus/toggle"],function(e,t,n){return n(".onoff",".advanced","p.description",function(n,r){return n===!0?(e(this).text(t.close),e(r).show()):(e(this).text(t.open),e(r).hide())})});

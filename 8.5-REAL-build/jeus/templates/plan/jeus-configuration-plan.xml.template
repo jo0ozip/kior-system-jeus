@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jeus-configuration-plan xmlns="http://www.tmaxsoft.com/xml/ns/jeus"
+                         xmlns:jeus="http://www.tmaxsoft.com/xml/ns/jeus">
+    <configurations>
+        <!-- Replace <name> tag of domain admin server -->
+        <configuration>
+            <action>REPLACE</action>
+            <xpath>//jeus:name[.='adminServer']</xpath>
+            <value>
+                <![CDATA[<name>das</name>]]>
+            </value>
+        </configuration>
+        <!-- For all servers, remove <listener> tag of which name is "http-listener" -->
+        <configuration>
+            <action>DELETE</action>
+            <xpath>/child::jeus:domain/child::jeus:servers/child::jeus:server/child::jeus:listeners/child::jeus:listener/child::jeus:name[.='http-listener']/parent::*</xpath>
+        </configuration>
+        <!-- Append <jvm-option> tag to server of which name is "das" -->
+        <configuration>
+            <action>APPEND_CHILD</action>
+            <xpath>/descendant::jeus:server/child::jeus:name[.='das']/../child::jeus:jvm-config</xpath>
+            <value>
+                <![CDATA[<jvm-option>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5055</jvm-option>]]>
+            </value>
+        </configuration>
+        <!-- Insert <database> tag before another <database> tag of which data source ID is "ds1" -->
+        <configuration>
+            <action>INSERT_BEFORE</action>
+            <xpath>/jeus:domain/jeus:resources/jeus:data-source/jeus:database/jeus:data-source-id[.='ds1']/..</xpath>
+            <value>
+                <![CDATA[
+                <database>
+                    <data-source-id>ds0</data-source-id>
+                    <data-source-class-name>org.apache.derby.jdbc.ClientConnectionPoolDataSource</data-source-class-name>
+                    <data-source-type>ConnectionPoolDataSource</data-source-type>
+                    <server-name>localhost</server-name>
+                    <port-number>1527</port-number>
+                    <database-name>DB1</database-name>
+                    <user>app</user>
+                    <password>app</password>
+                    <property>
+                        <name>ConnectionAttributes</name>
+                        <type>java.lang.String</type>
+                        <value>;create=true</value>
+                    </property>
+                </database>
+                ]]>
+            </value>
+        </configuration>
+    </configurations>
+</jeus-configuration-plan>

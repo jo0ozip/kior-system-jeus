@@ -1,1 +1,0 @@
-define(["jquery","jquery-ui/dialog","bundle"],function(e,t,n){return function(t,r){return e("<div>"+r+"</div>").dialog({dialogClass:"dialog confirm",autoOpen:!1,modal:!0,width:390,resizable:!1,buttons:[{text:n.ok,click:function(){return e("#curtain").show(),e(t).closest("form").submit()}},{text:n.cancel,click:function(){return e(this).dialog("close")}}]})}});

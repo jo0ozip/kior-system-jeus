@@ -1,1 +1,0 @@
-define(["jquery","jquery.cookie"],function(e){return function(t){var n;return n="com.tmax.soft.jeus.scrollPosition",e.cookie.defaults={path:t},e(window).scrollTop(e.cookie(n)),e(window).unload(function(){return e.cookie(n,e(window).scrollTop())})}});

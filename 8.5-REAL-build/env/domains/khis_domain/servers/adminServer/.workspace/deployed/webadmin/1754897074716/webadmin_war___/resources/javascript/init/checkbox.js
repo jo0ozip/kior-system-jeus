@@ -1,1 +1,0 @@
-require(["jquery","jeus/checkbox","lodash"],function(e,t,n){return e("body").on("change","input.eventChange[type=checkbox]",function(n){return t.change(e(this))})});

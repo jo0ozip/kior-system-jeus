@@ -1,1 +1,0 @@
-require(["jquery"],function(e){return e("#history").click(function(){return e("#history section").slideToggle("fast")})});

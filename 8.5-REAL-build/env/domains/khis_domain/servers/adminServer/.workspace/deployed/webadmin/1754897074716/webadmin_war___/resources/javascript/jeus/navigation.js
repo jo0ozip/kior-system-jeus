@@ -1,1 +1,0 @@
-define(["jquery"],function(e){return function(t,n,r,i){return e(document).on("click",".navigation li a",function(s){var o;return s.preventDefault(),o=e(this).attr("href").substring(1),n!==null&&o!=="root://"&&e(n).attr("value",o),e.post(t,{path:o,directoryOnly:r,multiple:!!i},function(t){return e(".navigation").empty().html(t)},"html"),!1})}});

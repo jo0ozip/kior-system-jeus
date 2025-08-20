@@ -1,0 +1,37 @@
+#!/bin/sh
+# $Id$
+
+# set up JEUS_HOME.
+if [ -z "$JEUS_HOME" ] ; then
+   PRG="$0"
+   progname=`basename "$0"`
+   saveddir=`pwd`
+
+   dirname_prg=`dirname "$PRG"`
+   cd "$dirname_prg"
+
+   while [ -h "$PRG" ] ; do
+      ls=`ls -ld "$PRG"`
+      link=`expr "$ls" : '.*-> \(.*\)$'`
+      if expr "$link" : '/.*' > /dev/null; then
+      PRG="$link"
+      else
+        PRG=`dirname "$PRG"`"/$link"
+      fi
+   done
+
+   JEUS_HOME=`dirname "$PRG"`/..
+
+   cd "$saveddir"
+
+   JEUS_HOME=`cd "$JEUS_HOME" && pwd`
+
+fi
+
+. ${JEUS_HOME}/bin/jeus.properties
+
+
+JEUS_WSDIR=${JEUS_HOME}/webserver; export JEUS_WSDIR
+LD_LIBRARY_PATH=$JEUS_HOME/webserver/lib:${LD_LIBRARY_PATH}; export LD_LIBRARY_PATH
+
+${JEUS_HOME}/webserver/bin/wsadmin "$*"

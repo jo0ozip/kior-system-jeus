@@ -1,6 +1,0 @@
-- import jeus.tool.webadmin.config.ServerInfo
-
--@ val serverInfos: List[ServerInfo]
--@ val serverName: String = null
-
-- render("/WEB-INF/scalate/monitoring/jms/durablesubscriptions/durablesubscription.scaml", Map("targetName" -> "server", "target" -> serverName, "targets" -> serverInfos.filter(_.checkStatus(S.message("level.RUNNING"))).map(_.name)))

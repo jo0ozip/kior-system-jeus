@@ -1,0 +1,7 @@
+# Network Address Translation Configuration
+#
+# Virtual host lists:
+# {IP_ADDRESS} = {translation_IP_ADDRESS} or {translation_HOSTNAME}
+# example) if you would like to translate "10.0.2.104" as "10.255.14.104"
+# 10.0.2.104=10.255.14.104
+#
