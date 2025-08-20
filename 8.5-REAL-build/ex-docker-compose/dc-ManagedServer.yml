@@ -1,8 +1,10 @@
 services:
   node01:
     image: app-test:latest
-    #pull_policy: always
+    pull_policy: always
     #entrypoint: ["start.sh"]
+    #tmpfs:
+    #  - ${JEUS_HOME}/domains/jeus_domain/servers:size=2g
     container_name: ManagedServer
     hostname: ManagedServer
     platform: linux/amd64
