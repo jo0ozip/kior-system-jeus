@@ -1,0 +1,17 @@
+-@ val gauge: Any
+
+- 
+	val width = 
+		gauge match {
+			case gauge: String =>  
+				if(gauge.stripSuffix("%").toDouble < 100) gauge.stripSuffix("%").toDouble + "%"
+				else "100%"
+			case gauge : java.lang.Number => 
+				if(gauge.doubleValue() < 100) gauge + "%"
+				else "100%"
+			case gauge => gauge + "%"
+		}
+
+
+.barGauge
+	.gauge(style = "width: #{width};") = gauge

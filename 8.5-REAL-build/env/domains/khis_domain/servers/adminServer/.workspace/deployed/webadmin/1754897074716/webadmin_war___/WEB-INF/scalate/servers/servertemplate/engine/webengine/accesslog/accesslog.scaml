@@ -1,0 +1,91 @@
+-@ val handlers: List[CommonHandlerType] = Nil
+-@ val serverTemplateName: String
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:servers.access-log.title"))
+	- J.base = "domain.server-templates.server-template.web-engine.access-log"
+
+	- render("/WEB-INF/scalate/menu/server-template.scaml", Map("first" -> 2, "second" -> 0, "third" -> 4))
+
+	%form(method="post" action="#{requestUri}")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".enable")
+					- J.checkbox()
+				- J.field(schema = ".format")
+					- J.input()
+				- J.field(schema = ".exclude-ext")
+					- J.input()
+				- J.field(schema = ".enable-host-name-lookup")
+					- J.checkbox()
+
+		- J.layout("advanced")
+			.table
+				- J.field(schema = ".filter-class")
+					- J.input()
+				- J.field(schema = ".formatter-pattern")
+					- J.input()
+
+		.lineBar
+		- J.render("buttons")
+
+	%h2.title
+		= J.title("message:servers.handlers.title", J.base)
+
+	= Table.render(null, handlers)
+		- case 1 =>
+			- Item("message:header.name")
+				- (index, row) =>
+					- val urlBase = 
+						- row match
+							- case row: FileHandlerType =>
+								- "/servertemplate/{servertemplate}/engine/webengine/accesslog/filehandler/{name}"
+							- case row: SmtpHandlerType =>
+								- "/servertemplate/{servertemplate}/engine/webengine/accesslog/smtphandler/{name}"
+							- case row: SocketHandlerType =>
+								- "/servertemplate/{servertemplate}/engine/webengine/accesslog/sockethandler/{name}"
+							- case row: UserHandlerType =>
+								- "/servertemplate/{servertemplate}/engine/webengine/accesslog/userhandler/{name}"
+					- val url = J.buildUri(urlBase, serverTemplateName, row.getName())
+					%a(href="#{url}") = row.getName()
+		- case 2 =>
+			- Item("message:header.type", "30%")
+				- (index, row) =>
+					- row match
+						- case row: FileHandlerType =>
+							file
+						- case row: SmtpHandlerType =>
+							smtp
+						- case row: SocketHandlerType =>
+							socket
+						- case row: UserHandlerType =>
+							user
+		- case 3 =>
+			- Item("message:header.level", "30%")
+				- (index, row) =>
+					= row.getLevel
+		- case 4 =>
+			- Item(null, "90px", "center")
+				- (index, row) =>
+					- val urlBase =
+						- row match
+							- case row: FileHandlerType =>
+								- "/servertemplate/{servertemplate}/engine/webengine/accesslog/filehandler/{name}"
+							- case row: SmtpHandlerType =>
+								- "/servertemplate/{servertemplate}/engine/webengine/accesslog/smtphandler/{name}"
+							- case row: SocketHandlerType =>
+								- "/servertemplate/{servertemplate}/engine/webengine/accesslog/sockethandler/{name}"
+							- case row: UserHandlerType =>
+								- "/servertemplate/{servertemplate}/engine/webengine/accesslog/userhandler/{name}"
+					- val url = J.buildUri(urlBase, serverTemplateName, row.getName())
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "action" -> url, "method" -> "delete", "cssClass" -> "bt_del", "disabled" -> !hasLock))
+
+	- if (hasLock)
+		.buttonGroup
+			- List(("message:servers.server.log.filehandler", "/filehandler"), ("message:servers.server.log.smtphandler", "/smtphandler"), ("message:servers.server.log.sockethandler", "/sockethandler"), ("message:servers.server.log.userhandler", "/userhandler")) foreach 
+				- case (label, subUrl) =>
+					- var url = J.buildUri("/servertemplate/{servertemplate}/engine/webengine/accesslog" + subUrl, serverTemplateName)
+					- J.render("formButton", Map("label" -> label, "action" -> url, "name" -> "create", "cssClass" -> "bt_handler"))		

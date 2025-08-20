@@ -1,0 +1,10 @@
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:server.log.userhandler.title"))
+	- J.base = "domain.servers.server.web-engine.access-log.handler.user-handler"
+
+	- val isReadonly = if(isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 2, "second" -> 0, "third" -> 4))
+	- render("/WEB-INF/scalate/common/userhandler.scaml")

@@ -1,0 +1,44 @@
+-@ val createMode: Boolean = false
+-@ val model: InvocationType
+
+
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:server.lifecycle-invocation.invocation.title"))
+	- J.base = "domain.servers.server.lifecycle-invocation.invocation"
+	- val isReadonly = if(!createMode && isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 1, "second" -> 4))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- var basic = "disabledbasic"
+		- if(!isReadonly)
+			- J.render("buttons")
+			- basic = "basic"
+
+		- J.layout(basic)
+			.table
+				- J.field(schema = ".invocation-type")
+					- J.select()
+				- J.field(schema = ".invocation-argument")
+					- J.textarea()
+			- J.group(schema = ".invocation-method")
+				.table
+					- J.field(schema = ".method-name")
+						- if (createMode)
+							- J.input()
+						- else
+							= model.getInvocationMethod.getMethodName
+							- J.hidden()
+					- J.field(schema = ".method-params.method-param")
+						- J.textarea()
+		- val id = if(createMode) 0 else model.getId()
+		%input(type="hidden" name="id" value="#{id}")
+
+		.lineBar
+		- if(!isReadonly)
+			- J.render("buttons")

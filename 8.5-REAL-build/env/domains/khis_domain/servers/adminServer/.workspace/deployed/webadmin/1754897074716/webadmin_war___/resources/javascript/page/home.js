@@ -1,0 +1,1 @@
+require(["jquery","jquery-ui/accordion"],function(e){return e("#homeStatistics").accordion({header:"header"})});

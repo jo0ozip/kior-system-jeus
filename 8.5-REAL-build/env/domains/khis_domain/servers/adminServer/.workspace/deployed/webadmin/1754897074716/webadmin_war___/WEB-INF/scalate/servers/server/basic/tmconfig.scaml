@@ -1,0 +1,74 @@
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:servers.tmconfig.title"))
+	- J.base = "domain.servers.server.tm-config"
+	- val isReadonly = if(isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 0, "second" -> 6))
+
+	%form(method="post" action="#{requestUri}")
+
+		- J.render("fieldIcons")
+		- var basic = "disabledbasic"
+		- if(!isReadonly)
+			- J.render("buttons", Map("addition" -> List("delete")))
+			- basic = "basic"
+			
+		- J.layout(basic)
+			.table
+				- J.field(schema = ".active-timeout")
+					- J.input()
+				- J.field(schema = ".automatic-recovery")
+					- J.checkbox()
+
+		- J.layout("advanced")
+			.table
+				- J.field(schema = ".prepare-timeout")
+					- J.input()
+					%span.unit = S.message("common.ms")
+				- J.field(schema = ".prepared-timeout")
+					- J.input()
+					%span.unit = S.message("common.ms")
+				- J.field(schema = ".commit-timeout")
+					- J.input()
+					%span.unit = S.message("common.ms")
+				- J.field(schema = ".recovery-timeout")
+					- J.input()
+					%span.unit = S.message("common.ms")
+				- J.field(schema = ".incomplete-timeout")
+					- J.input()
+					%span.unit = S.message("common.ms")
+				- J.field(schema = ".tx-log-dir")
+					- J.input()
+			- J.group(schema = ".pooling")
+				.table
+				- J.group(schema = ".shared", noBinding = false, attributes = Map("front" -> "choice", "choiceGroup" -> "poolingGroup"))
+					.table
+						- J.field(schema = ".reserved-thread-num")
+							- J.input()
+				- J.group(schema = ".dedicated", noBinding = false, attributes = Map("front" -> "choice", "choiceGroup" -> "poolingGroup"))
+					.table
+						- J.field(schema = ".min")
+							- J.input()
+						- J.field(schema = ".max")
+							- J.input()
+						- J.field(schema = ".keep-alive-time")
+							- J.input()
+							%span.unit = S.message("common.ms")
+						- J.field(schema = ".queue-size")
+							- J.input()
+					- J.group(schema = ".stuck-thread-handling")
+						.table
+							- J.field(schema = ".max-stuck-thread-time")
+								- J.input()
+								%span.unit = S.message("common.ms")
+							- J.field(schema = ".action-on-stuck-thread")
+								- J.select()
+							- J.field(schema = ".stuck-thread-check-period")
+								- J.input()
+								%span.unit = S.message("common.ms")
+
+		.lineBar
+		- if(!isReadonly)
+			- J.render("buttons", Map("addition" -> List("delete")))

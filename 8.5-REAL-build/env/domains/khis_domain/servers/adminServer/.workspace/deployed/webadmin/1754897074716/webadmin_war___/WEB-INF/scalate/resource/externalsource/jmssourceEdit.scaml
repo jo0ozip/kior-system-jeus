@@ -1,0 +1,37 @@
+-@ val createMode: Boolean = false
+-@ val model: JmsSourceType
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:resources.jmssource.title"))
+	- J.base = "domain.resources.external-source.jms-source"
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".vendor")
+					- J.select()
+				- J.field(schema = ".factory-class-name")
+					- J.input()
+				- J.field(schema = ".resource-type")
+					- J.select()
+				- J.field(schema = ".export-name")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getExportName
+				- J.field(schema = ".queue")
+					- J.input()
+				- J.field(schema = ".queueManager")
+					- J.input()
+				- J.field(schema = ".topic")
+					- J.input()
+				- J.field(example = "message:common.ex.nameType_equal_value", schema = ".property")
+					- J.textarea()
+
+
+		.lineBar
+		- J.render("buttons")

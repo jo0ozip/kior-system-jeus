@@ -1,0 +1,1 @@
+require(["jquery"],function(e){return e("#btnRuntime").click(function(){return e("#runtimeList").slideToggle("fast")}),e("#runtimeList").on("click",".close_btn",function(){return e("#runtimeList").slideToggle("fast")}).on("click","a",function(t){return t.preventDefault(),window.open(e(this).attr("href"),"runtime","width=850,height=700,scrollbars=yes,toolbars=no").focus()})});

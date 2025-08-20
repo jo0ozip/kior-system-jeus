@@ -1,0 +1,24 @@
+-@ val createMode: Boolean = false
+-@ val model: ManagedThreadFactoryType
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:resources.managed-thread-factory.title"))
+	- J.base = "domain.resources.managed-thread-factory"
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".export-name")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getExportName
+				- J.field(schema = ".thread-priority")
+					- J.input()
+
+		.lineBar
+		- J.render("buttons")

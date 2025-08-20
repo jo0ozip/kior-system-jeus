@@ -1,0 +1,44 @@
+-@ val createMode: Boolean = false
+-@ val model: RolePermissionType
+-@ val __principals: List[String] = Nil
+-@ val isInXML: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:security.role-permissions.title"))
+	- J.base = "policies.policy.role-permissions.role-permission"
+	- render("/WEB-INF/scalate/menu/security.scaml", Map("first" -> 5, "second" -> 1))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		
+		- var basic = "disabledbasic"
+		- if(isInXML)
+			- J.render("buttons")
+			- basic = "basic"
+
+		- J.layout(basic)
+			.table
+				- J.field(required = true, schema = ".role")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getRole
+				- J.field(schema = ".principal")
+					- if (__principals == Nil)
+						= S.message("common.noExist.entry")
+					- else
+						- J.checkboxes(options = __principals)
+				- J.field(schema = ".actions")
+					- J.input()
+				- J.field(schema = ".classname")
+					- J.input()
+				- J.field(schema = ".excluded")
+					- J.checkbox()
+				- J.field(schema = ".unchecked")
+					- J.checkbox()
+
+
+		.lineBar
+		- if(isInXML)
+			- J.render("buttons")

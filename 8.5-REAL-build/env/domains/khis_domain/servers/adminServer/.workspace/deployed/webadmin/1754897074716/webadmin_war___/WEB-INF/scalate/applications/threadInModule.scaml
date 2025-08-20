@@ -1,0 +1,33 @@
+-@ val serverName: String
+-@ val applicationID: String
+
+-@ val model: List[TabularData]
+
+-@ val moduleName: String
+
+-@ val contextName: String
+
+- layout("/scalate/layouts/main.scaml", Map("title" -> "message:applications.application.title"))
+	- J.base = "domain.deployed-applications.deployed-application"
+	- render("/WEB-INF/scalate/menu/application.scaml", Map("selected" -> 0))
+	
+	%ul.tab02
+		-
+			val url = Utils.buildUri("/applications/applications/{applicationID}", applicationID)
+			J.render("tab", Map(
+				"items" -> List(
+					TabItem(url, "message:common.information.taplabel"),
+					TabItem(Utils.buildUri("/applications/applications/{applicationID}/{serverName}", applicationID, serverName), serverName),
+					TabItem(Utils.buildUri("/applications/applications/{applicationID}/{serverName}/ear/war/{moduleName}", applicationID, serverName, moduleName), moduleName),
+					TabItem(Utils.buildUri("/applications/applications/{applicationID}/{serverName}/ear/thread/{moduleName}/{contextName}", applicationID, serverName, moduleName, contextName), "message:common.threadinfo.taplabel")
+				),
+				"selected" -> 3
+			))
+
+	-  model.zipWithIndex.foreach
+		- case (data, index) =>
+			- if (index == 0)
+				%h2.title = data.getTitle
+			- else
+				= Tabular.render(null, data)()
+			

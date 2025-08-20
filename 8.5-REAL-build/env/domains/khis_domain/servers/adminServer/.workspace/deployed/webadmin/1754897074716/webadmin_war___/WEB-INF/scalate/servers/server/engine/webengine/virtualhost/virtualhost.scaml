@@ -1,0 +1,37 @@
+-@ val serverName: String
+-@ val model: List[VirtualHostType]
+
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:servers.virtual-host.title"))
+	- J.base = "domain.servers.server.web-engine.virtual-host"
+
+
+	- val isReadonly = if(isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 2, "second" -> 0, "third" -> 2))
+
+	%h2.title
+		= J.title("message:servers.virtual-host.title", J.base)
+
+	= Table.render(null, model)
+		- case 1 =>
+			- Item("message:header.virtual-host-name")
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{server}/engine/webengine/virtualhost/{virtualHostName}", serverName, row.getVirtualHostName)
+					%a(href="#{url}") = row.getVirtualHostName
+		- case 2 =>
+			- Item("message:header.host-name", "40%")
+				- (index, row) =>
+					= row.getHostName.asScala.mkString(",")
+		- case 3 =>
+			- Item("90px", List("center"),
+				- Head
+					- () =>
+						- val url = J.buildUri("/servers/{server}/engine/webengine/virtualhost", serverName)
+						- J.render("formButton", Map("label" -> "message:common.add.button", "action" -> url, "name" -> "create", "cssClass" -> "bt_add", "disabled" -> {!hasLock || isReadonly}))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{server}/engine/webengine/virtualhost/{virtualHostName}", serverName, row.getVirtualHostName)
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "action" -> url, "method" -> "delete", "cssClass" -> "bt_del", "disabled" -> {!hasLock || isReadonly}))

@@ -1,0 +1,65 @@
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:servers.sessionconfig.title"))
+	- J.base = "domain.servers.server.web-engine.session-config"
+
+	- val isReadonly = if(isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 2, "second" -> 0, "third" -> 5))
+
+	%form(method="post" action="#{requestUri}")
+
+		- J.render("fieldIcons")
+		- var basic = "disabledbasic"
+		- if(!isReadonly)
+			- J.render("buttons")
+			- basic = "basic"
+
+		- J.layout(basic)
+			.table
+				- J.field(schema = ".timeout")
+					- J.input()
+					%span.unit m
+				- J.field(schema = ".max-session-count")
+					- J.input()
+				- J.field(schema = ".shared")
+					- J.checkbox()
+
+		- J.layout("advanced")
+			- J.group(label = "message:server.sessionconfig.label")
+				.table
+					- J.field(schema = ".reload-persistent")
+						- J.checkbox()
+			- J.group(schema = ".tracking-mode")
+				.table
+					- J.field(schema = ".cookie")
+						- J.checkbox()
+					- J.field(schema = ".url")
+						- J.checkbox()
+					- J.field(schema = ".ssl")
+						- J.checkbox()
+			- J.group(schema = ".session-cookie")
+				.table
+					- J.field(schema = ".cookie-name")
+						- J.input()
+					- J.field(schema = ".version")
+						- J.input()
+					- J.field(schema = ".domain")
+						- J.input()
+					- J.field(schema = ".path")
+						- J.input()
+					- J.field(schema = ".max-age")
+						- J.input()
+					- J.field(schema = ".secure")
+						- J.checkbox()
+					- J.field(schema = ".http-only")
+						- J.checkbox()
+					- J.field(schema = ".same-site")
+						- J.select()
+					- J.field(schema = ".comment")
+						- J.input()
+
+		.lineBar
+		- if(!isReadonly)
+			- J.render("buttons")

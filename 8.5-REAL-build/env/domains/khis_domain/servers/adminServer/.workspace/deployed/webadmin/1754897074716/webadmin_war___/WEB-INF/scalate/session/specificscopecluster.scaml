@@ -1,0 +1,22 @@
+-@ val createMode: Boolean = false
+-@ var model: SpecificScopeClusterType
+
+- layout("/scalate/layouts/main.scaml", Map("title" -> "message:session.specific-scope-cluster.title"))
+	- J.base = "domain.session-cluster.specific-scope-clusters.specific-scope"
+	- render("/WEB-INF/scalate/menu/session.scaml", Map("selected" -> 0, "disabled" -> createMode))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".name")
+					- if(createMode)
+						- J.input()
+					- else
+						= model.getName
+		.lineBar
+		- J.render("buttons")

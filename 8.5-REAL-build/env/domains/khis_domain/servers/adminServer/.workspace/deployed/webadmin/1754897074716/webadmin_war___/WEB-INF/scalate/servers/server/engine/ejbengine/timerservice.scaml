@@ -1,0 +1,48 @@
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:servers.timerservice.title"))
+	- J.base = "domain.servers.server.ejb-engine.timer-service"
+
+	- val isReadonly = if(isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 2, "second" -> 2, "third" -> 2))
+
+	%form(method="post" action="#{requestUri}")
+
+		- J.render("fieldIcons")
+		- var basic = "disabledbasic"
+		- if(!isReadonly)
+			- J.render("buttons", Map("addition" -> List("delete")))
+			- basic = "basic"
+
+		- J.layout(basic)
+			.table
+				- J.field(schema = ".support-persistence")
+					- J.checkbox()
+				- J.field(schema = ".max-retrial-count")
+					- J.input()
+				- J.field(schema = ".retrial-interval")
+					- J.input()
+
+		- J.layout("advanced")
+			.table
+			- J.group(schema = ".thread-pool")
+				.table
+					- J.field(schema = ".min")
+						- J.input()
+					- J.field(schema = ".max")
+						- J.input()
+					- J.field(schema = ".period")
+						- J.input()
+						%span.unit = S.message("common.ms")
+			- J.group(schema = ".database-setting", noBinding = false, attributes = Map("tail" -> "checkboxForGroup"))
+				.table
+					- J.field(schema = ".data-source-id")
+						- J.input()
+					- J.field(schema = ".db-vendor")
+						- J.select()
+
+		.lineBar
+		- if(!isReadonly)
+			- J.render("buttons", Map("addition" -> List("delete")))

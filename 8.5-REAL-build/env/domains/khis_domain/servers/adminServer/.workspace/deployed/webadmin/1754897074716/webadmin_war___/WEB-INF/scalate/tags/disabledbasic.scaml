@@ -1,0 +1,9 @@
+-@ val body: String
+-@ val disabled: Boolean = false
+
+%section.basic
+	%h2
+		!= S.message("common.basic.title")
+	!= body
+- J.init
+	require(["jeus/disabled"]);

@@ -1,0 +1,37 @@
+-@ val first: Int = 0
+-@ val second: Int = 0
+
+.menus
+	%ul.tab01
+		-
+			J.render("tab", Map(
+				"items" -> List(
+					TabItem("/monitoring/jms/destinations", "message:menu.monitoring.jms.destinations"),
+					TabItem("/monitoring/jms/durable", "message:menu.monitoring.jms.durable"),
+					TabItem("/monitoring/jms/clients", "message:menu.monitoring.jms.clients"),
+					TabItem("/monitoring/jms/pendingtransactions", "message:menu.monitoring.jms.pendingtransactions")				
+				),
+				"selected" -> first
+			))
+	- first match 
+		- case 0 =>
+			%ul.tab02
+				-
+					J.render("tab", Map(
+						"items" -> List(
+							TabItem("/monitoring/jms/destinations/server", "message:common.server.label"),
+							TabItem("/monitoring/jms/destinations/cluster", "message:common.cluster.label")
+						),
+						"selected" -> second
+					))
+		- case 1 =>
+			%ul.tab02
+				-
+					J.render("tab", Map(
+						"items" -> List(
+							TabItem("/monitoring/jms/durable/server", "message:common.server.label"),
+							TabItem("/monitoring/jms/durable/cluster", "message:common.cluster.label")
+						),
+						"selected" -> second
+					))					
+		- case _ =>

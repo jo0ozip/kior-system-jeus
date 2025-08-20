@@ -1,0 +1,38 @@
+-@ val createMode: Boolean = false
+-@ val model: LibraryRefType
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:clusters.libraryref.title"))
+	- J.base = "domain.clusters.cluster.lifecycle-invocation.library-ref"
+	- render("/WEB-INF/scalate/menu/cluster.scaml", Map("selected" -> 4))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".library-name")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getLibraryName()
+				- J.field(schema = ".failon-error")
+					- J.checkbox()
+			- J.group(schema = ".specification-version")
+				.table
+					- J.field(schema = ".value", label = "message:common.value")
+						- J.input()
+					- J.field(schema = ".exact-match", required = false)
+						- J.checkbox()
+			- J.group(schema = ".implementation-version")
+				.table
+					- J.field(schema = ".value", label = "message:common.value")
+						- J.input()
+					- J.field(schema = ".exact-match", required = false)
+						- J.checkbox()
+
+
+		.lineBar
+		- J.render("buttons")

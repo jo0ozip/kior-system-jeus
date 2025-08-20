@@ -1,0 +1,40 @@
+-@ val domainName: String
+-@ val subjectValidationList: List[SecurityServiceType] = Nil
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("base" -> "domain.security-manager.security-domains.security-domain.subject-validation", "title" -> "message:security.subject-validationn.title"))
+	- J.base = "domain.security-manager.security-domains.security-domain.subject-validation"
+	- render("/WEB-INF/scalate/menu/security.scaml", Map("first" -> 3, "second" -> 6))
+
+	%form(method="post" action="#{requestUri}")
+
+		- J.render("fieldIcons")
+		- J.render("buttons", Map("addition" -> List("delete")))
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".default-subject-validation-service")
+					- J.checkbox()
+
+
+		.lineBar
+		- J.render("buttons", Map("addition" -> List("delete")))
+
+	- J.layout("subMain", Map("title" -> "message:security.subject-validationn.custom.title"))
+		- J.base = J.base + ".custom-subject-validation-service"
+
+		= Table.render(null, subjectValidationList)
+			- case 1 =>
+				- Item("message:header.classname")
+					- (index, row) =>
+						- val url = J.buildUri("/security/{domainName}/securityservice/subject/service/{classname}", domainName, row.getClassname)
+						%a(href="#{url}") = row.getClassname
+			- case 2 =>
+				- Item("90px", List("center"),
+					- Head
+						- () =>
+							- val url = J.buildUri("/security/{domainName}/securityservice/subject/service", domainName)
+							- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "bt_add", "name" -> "create", "disabled" -> !hasLock, "action" -> url))
+				- )
+					- (index, row) =>
+						- val url = J.buildUri("/security/{domainName}/securityservice/subject/service/{classname}", domainName, row.getClassname)
+						- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "bt_del", "disabled" -> !hasLock, "action" -> url))

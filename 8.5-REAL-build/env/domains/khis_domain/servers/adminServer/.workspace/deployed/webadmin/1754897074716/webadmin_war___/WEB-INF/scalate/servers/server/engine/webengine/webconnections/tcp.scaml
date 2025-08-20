@@ -1,0 +1,52 @@
+-@ val createMode: Boolean = false
+-@ val model: TcpListenerType
+-@ val __serverListenerRef: List[String]
+
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:server.web-engine.web-connections.tcp-listener.title"))
+	- J.base = "domain.servers.server.web-engine.web-connections.tcp-listener"
+	- val isReadonly = if(!createMode && isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 2, "second" -> 0, "third" -> 3))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- var basic = "disabledbasic"
+		- if(!isReadonly)
+			- J.render("buttons")
+			- basic = "basic"
+
+		- J.layout(basic)
+			.table
+				- J.field(schema = ".name")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getName
+				- J.field(schema = ".output-buffer-size")
+					- J.input()
+					%span.unit byte
+				- J.field(schema = ".server-listener-ref")
+					- J.select(options = __serverListenerRef)
+				- J.field(schema = ".dispatcher-config-class")
+					- J.input()
+			- render("threadpool.scaml")
+
+		- J.layout("advanced")
+			.table
+			- layout("common.scaml")
+				- J.field(schema = ".connection-type")
+					- J.select()
+				- J.field(schema = ".server-access-control")
+					- J.checkbox()
+				- J.field(schema = ".allowed-server")
+					- J.textarea()
+
+		.lineBar
+		- if(!isReadonly)
+			- J.render("buttons")
+

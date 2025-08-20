@@ -1,0 +1,33 @@
+- import jeus.tool.webadmin.config.ServerInfo
+
+-@ val items: List[String] = attributeOrElse[List[ServerInfo]]("serverInfos", Nil).filter(_.checkStatus(S.message("level.RUNNING"))).map(_.name)
+-@ val selected: String = null
+-@ val cssClass: String = null
+-@ val baseUri: String
+
+%ul.accordian{:class => cssClass}
+	- val customHeader: (String, Boolean) => Unit = attributeOrElse("customAccordianHeader", null)
+	- items.foreach
+		- item =>
+			- val url = J.buildUri(baseUri + "/{name}", item)
+			- if (item == selected)
+				%li.selected
+					%header
+						%h2
+							%a(href="#{url}") = item
+						- if(customHeader != null)
+							- customHeader(item, true)
+
+					- J.renderBody
+			- else
+				- if(items.size == 1)
+					- J.redirect(url)
+				%li
+					%header
+						%h2
+							%a(href="#{url}") = item
+						- if(customHeader != null)
+							- customHeader(item, false)
+
+	- attributes("customAccordianHeader") = null							
+

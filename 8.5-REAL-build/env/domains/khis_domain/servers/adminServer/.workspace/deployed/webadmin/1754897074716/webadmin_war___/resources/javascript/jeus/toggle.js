@@ -1,0 +1,1 @@
+define(["jquery"],function(e){return function(t,n,r,i,s){return s==null&&(s=!0),e("body").on("click",t,function(t){var o,u,a;return o=e(this),a=e.isFunction(s)?s(o):(u=o.data("toggle"))!=null?u:s,o.data("toggle",!a),i.call(this,a,o.parents(n).find(r))})}});

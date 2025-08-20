@@ -1,0 +1,18 @@
+-@ val selected: Int = 0
+-@ val disabled: Boolean = false
+
+-@ val clusterName: String = ""
+
+- val url = Utils.buildUri("/clusters/{clusterName}", clusterName)
+%ul.tab01
+	-
+		J.render("tab", Map(
+			"items" -> List(
+				TabItem(url, "message:menu.basic"),
+				TabItem(url + "/resref", "message:menu.clusters.resref"),
+				TabItem(url + "/sessionclusterconfig", "message:menu.clusters.sessionclusterconfig"),
+				TabItem(url + "/jmsresource", "message:menu.clusters.jmsresource"),
+				TabItem(url + "/lifecycle", "message:menu.common.lifecycle")
+			),
+			"selected" -> selected
+		))

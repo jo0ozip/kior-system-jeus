@@ -1,0 +1,83 @@
+-@ val serverName: String
+-@ val applicationID: String
+-@ val applicationType: String = null
+-@ val model: List[TabularData]
+
+- layout("/scalate/layouts/main.scaml", Map("title" -> "message:applications.application.title"))
+	- J.base = "domain.deployed-applications.deployed-application"
+	- render("/WEB-INF/scalate/menu/application.scaml", Map("selected" -> 0))
+	%ul.tab02
+		-
+			val url = Utils.buildUri("/applications/applications/{applicationID}", applicationID)
+			J.render("tab", Map(
+				"items" -> List(
+					TabItem(url, "message:common.information.taplabel"),
+					TabItem(Utils.buildUri("/applications/applications/{applicationID}/{serverName}", applicationID, serverName), serverName)
+				),
+				"selected" -> 1
+			))
+
+	- applicationType match
+		- case "WAR" =>
+			- val len = model.length
+			- model.zipWithIndex.foreach
+				- case (data, index) =>
+					- if (index == 0)
+						= Tabular.render(null, data)
+							- case (20, displayNames) =>
+								- Item("message:header.command", "150px", "center")
+									- (index, row) =>
+										- var url = J.buildUri("/applications/applications/{applicationID}/{serverName}/reload/{contextName}", applicationID, serverName, row(0))
+										- J.render("formButton", Map("label" -> "message:applications.detail.reload.label", "action" -> url, "cssClass" -> "bt2", "method" -> "post"))
+										- url = J.buildUri("/applications/applications/{applicationID}/{serverName}/thread/{contextName}", applicationID, serverName, row(0))
+										%a.button.bt2(href="#{url}")
+											%span.button-text = S.message("applications.common.thread-info.button")
+					- else if (index == (len-2))
+						= Tabular.render(null, data)
+							- case (0, displayNames) =>
+								- Item(displayNames(0))	
+									- (index, row) =>
+										%pre = row(0)
+					- else if (index == (len-1))
+						= Tabular.render(null, data)
+							- case (0, displayNames) =>
+								- Item(displayNames(0))	
+									- (index, row) =>
+										- val url = J.buildUri("/applications/applications/{applicationID}/{serverName}/ejb/{name}", applicationID, serverName, row(0))
+										%a(href="#{url}") = row(0)	
+					- else
+						= Tabular.render(null, data)()
+		- case "EJB" =>
+			- model.zipWithIndex.foreach
+				- case (data, index) =>
+					- if (index == 1)
+						= Tabular.render(null, data)
+							- case (0, displayNames) =>
+								- Item(displayNames(0))
+									- (index, row) =>
+										- val url = J.buildUri("/applications/applications/{applicationID}/{serverName}/ejb/{name}", applicationID, serverName, row(0))
+										%a(href="#{url}") = row(0)
+					- else
+						= Tabular.render(null, data)()
+		- case "EAR" =>
+			- model.foreach
+				- case data =>
+					= Tabular.render(null, data)
+						- case (0, displayNames) =>
+							- Item(displayNames(0))
+								- (index, row) =>
+									- row(2) match
+										- case "EJB" =>
+											- val url = J.buildUri("/applications/applications/{applicationID}/{serverName}/ear/ejb/{name}", applicationID, serverName, row(0))
+											%a(href="#{url}") = row(0)
+										- case "WAR" =>
+											- val url = J.buildUri("/applications/applications/{applicationID}/{serverName}/ear/war/{name}", applicationID, serverName, row(0))
+											%a(href="#{url}") = row(0)
+										- case _ =>
+											= row(0)
+		- case _ =>
+			- model.foreach
+				- case data =>
+					= Tabular.render(null, data)()
+
+

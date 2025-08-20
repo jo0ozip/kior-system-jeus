@@ -1,0 +1,15 @@
+-@ val checked: java.lang.Boolean = null
+-@ val path: String
+-@ val modelAttribute: String = S.modelAttribute
+-@ val choiceGroup: String
+-@ val choiceDisabled: Boolean = !hasLock
+-@ val choiceReadonly: String = "false"
+
+- val _checked: Boolean = if(checked == null) J.checkNullInstance(modelAttribute, path) else checked
+
+%input.eventChange{:type => "radio", :disabled => choiceDisabled, :value => choiceReadonly, :checked => _checked, :name => choiceGroup}
+%input{:type => "hidden", :name => {"_" + path}}
+
+- J.init
+	require(["init/hidechoice"]);
+	require(["jeus/hidechoice"], function(init){init();});

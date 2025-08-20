@@ -1,0 +1,61 @@
+-@ val createMode: Boolean = false
+-@ val model: LifecycleInvocationType
+-@ val clusterName: String
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:clusters.lifecycle-invocation.title"))
+	- J.base = "domain.clusters.cluster.lifecycle-invocation"
+	- render("/WEB-INF/scalate/menu/cluster.scaml", Map("selected" -> 4))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".class-name")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getClassName()
+
+		.lineBar
+
+	- if (!createMode && hasText(model.getClassName()))
+		%h2.title
+			= J.title("message:clusters.libraryref.title", J.base)
+		= Table.render(null, model.getLibraryRef.asScala.toList)
+			- case 1 =>
+				- Item("message:header.library-name")
+					- (index, row) =>
+						- val url = J.buildUri("/clusters/{cluster}/lifecycle/{className}/libraryref/{libraryName}", clusterName, model.getClassName(), row.getLibraryName())
+						%a(href="#{url}") = row.getLibraryName()
+			- case 2 =>
+				- Item("90px", List("center"),
+					- Head
+						- () =>
+							- val url = J.buildUri("/clusters/{cluster}/lifecycle/{className}/libraryref", clusterName, model.getClassName())
+							- J.render("formButton", Map("label" -> "message:common.add.button", "action" -> url, "name" -> "create", "cssClass" -> "bt_add", "disabled" -> !hasLock))
+				- )
+					- (index, row) =>
+						- val url = J.buildUri("/clusters/{cluster}/lifecycle/{className}/libraryref/{libraryName}", clusterName, model.getClassName(), row.getLibraryName())
+						- J.render("formButton", Map("label" -> "message:common.remove.button", "action" -> url, "method" -> "delete", "cssClass" -> "bt_del", "disabled" -> !hasLock))
+
+		%h2.title
+			= J.title("message:clusters.invocation.title", J.base)
+		= Table.render(null, model.getInvocation.asScala.toList)
+			- case 1 =>
+				- Item("message:header.method-name")
+					- (index, row) =>
+						- val url = J.buildUri("/clusters/{cluster}/lifecycle/{className}/invocation/{id}", clusterName, model.getClassName(), row.getId())
+						%a(href="#{url}") = row.getInvocationMethod().getMethodName()
+			- case 2 =>
+				- Item("90px", List("center"),
+					- Head
+						- () =>
+							- val url = J.buildUri("/clusters/{cluster}/lifecycle/{className}/invocation", clusterName, model.getClassName())
+							- J.render("formButton", Map("label" -> "message:common.add.button", "action" -> url, "name" -> "create", "cssClass" -> "bt_add", "disabled" -> !hasLock))
+				- )
+					- (index, row) =>					
+						- val url = J.buildUri("/clusters/{cluster}/lifecycle/{className}/invocation/{id}/{methodName}", clusterName, model.getClassName(), row.getId(), row.getInvocationMethod().getMethodName())
+						- J.render("formButton", Map("label" -> "message:common.remove.button", "action" -> url, "method" -> "delete", "cssClass" -> "bt_del", "disabled" -> {!hasLock || model.getInvocation.size() <= 1}))					

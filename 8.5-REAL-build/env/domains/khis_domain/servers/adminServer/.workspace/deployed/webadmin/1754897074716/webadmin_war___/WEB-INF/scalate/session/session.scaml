@@ -1,0 +1,115 @@
+-@ var model: DomainType
+
+- import jeus.tool.webadmin.Environment
+- val jEnv = S.eval[Environment]("@j_env")
+- val enableSessionCluster = model.getSessionCluster() != null
+
+- layout("/scalate/layouts/main.scaml", Map("title" -> "message:session.title", "description" -> "message:session.description", "help" -> "session"))
+	- J.base = "domain"
+
+	%form(method="post" action="#{requestUri}")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+			- J.group(schema = ".session-cluster")
+				.table
+					- J.field(schema = ".cluster-mode")
+						- J.select()
+					- J.field(schema = ".session-manager-provider")
+						- J.input()
+					- J.field(schema = ".exclude-das-in-cluster")
+						- J.checkbox()
+					- J.field(schema = ".properties", path = "sessionCluster.properties.property", example = "message:common.ex.key_equal_value")
+						- J.textarea()
+					- J.field(schema = ".sticky-encoding-rule")
+						- J.select()		
+				- J.group(schema = ".common-cluster-config")
+					.table
+						- J.field(schema = ".reserved-thread-num")
+							- J.input()
+						- J.field(schema = ".connect-timeout")
+							- J.input()
+							%span.unit = S.message("common.ms")
+						- J.field(schema = ".read-timeout")
+							- J.input()
+							%span.unit = S.message("common.ms")
+						- J.field(schema = ".allow-fail-back")
+							- J.checkbox()
+						- J.field(schema = ".failover-strategy")
+							- J.select()
+						- J.field(schema = ".backup-level")
+							- J.select()
+						- J.field(schema = ".backup-unit-size")
+							- J.input()
+						- J.field(schema = ".backup-queue-size")
+							- J.input()
+						- J.field(schema = ".ignore-flow-control")
+							- J.checkbox()
+						- J.field(schema = ".failover-delay")
+							- J.input()
+							%span.unit s
+						- J.field(schema = ".restart-delay")
+							- J.input()
+							%span.unit s	
+						- J.field(schema = ".properties", path = "sessionCluster.commonClusterConfig.properties.property", example = "message:common.ex.key_equal_value")
+							- J.textarea()			
+					- J.group(schema = ".jeus-login-manager", noBinding = false, attributes = Map("tail" -> "checkboxForGroup"))
+						.table
+							- J.field(schema = ".primary")
+								- J.input()
+							- J.field(schema = ".secondary")
+								- J.input()
+					- J.group(schema = ".passivation")
+						.table
+							- J.field(schema = ".file-path")
+								- J.input()
+							- J.field(schema = ".single-folder-file-limit")
+								- J.input()
+							- J.field(schema = ".min-hole")
+								- J.input()
+							- J.field(schema = ".packing-rate")
+								- J.input()
+							- J.field(schema = ".ratio")
+								- J.input()
+						- J.group(schema = ".trigger")
+							.table
+								- J.field(schema = ".timeout")
+									- J.input()
+								- J.field(schema = ".count-threshold")
+									- J.input()
+								- J.field(schema = ".memory-threshold")
+									- J.input()
+
+		.lineBar
+		- J.render("buttons")
+
+	- if(enableSessionCluster && !jEnv.isCloud)
+		%h2.title
+			= S.message("session.specific-scope-cluster.title")
+		- val datas: java.util.List[SpecificScopeClusterType] = model.getSessionCluster() match 
+			- case null => Nil.asJava
+			- case scc => scc.getSpecificScopeClusters() match
+				- case null => Nil.asJava
+				- case scs => scs.getSpecificScope()
+
+		= Table.render(null, datas.asScala.toList)
+			- case 1 =>
+				- Item("message:header.name")
+					- (index, row) =>
+						- val name = row.getName
+						- val uri = J.buildUri("/session/specificscopecluster/{name}", name)
+						%a(href="#{uri}") = name
+			- case 2 =>
+				- Item("130px", List("center"),
+					- Head
+						- () =>
+							- val uri = J.buildUri("/session/specificscopecluster")
+							- J.render("formButton", Map("name" -> "create", "label" -> "message:common.add.button", "action" -> uri, "cssClass" -> "bt_add", "disabled" -> !hasLock))
+				- )
+					- (index, row) =>
+						- val name = row.getName
+						- val uri = J.buildUri("/session/specificscopecluster/{name}", name)
+						- J.render("formButton", Map("btype" -> "submit", "label" -> "message:common.remove.button", "action" -> uri, "method" -> "delete", "cssClass" -> "bt_del", "disabled" -> !hasLock))

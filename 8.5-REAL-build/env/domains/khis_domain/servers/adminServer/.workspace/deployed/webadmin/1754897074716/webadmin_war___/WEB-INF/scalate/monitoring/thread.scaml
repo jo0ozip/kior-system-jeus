@@ -1,0 +1,55 @@
+-@ val serverName: String = null
+
+-@ val model: List[TabularData] = null
+-@ val detail: (String, String, List[TabularData]) = null
+
+- layout("/scalate/layouts/main.scaml", Map("description" -> "message:monitoring.thread.description", "title" -> "message:monitoring.thread.title"))
+	- J.base = "monitoring.thread"
+	- import jeus.tool.webadmin.Current
+
+	- val threadState = S.eval[Current]("@current").monitoringThreadState
+
+	- J.layout("accordian", Map("selected" -> serverName, "baseUri" -> "/monitoring/thread"), true)
+		.topButtonGroup
+			- J.render("formButton", Map("action" -> J.buildUri("/monitoring/thread/{serverName}", serverName), "label" -> "message:monitoring.thread.all.button", "cssClass" -> "bt2", "method" -> "post", "name" -> "changeState", "disabled" -> {threadState == null}))
+			- J.layout("formButton", Map("action" -> J.buildUri("/monitoring/thread/{serverName}", serverName), "label" -> "message:monitoring.thread.active.button", "cssClass" -> "bt2", "method" -> "post", "name" -> "changeState", "disabled" -> {threadState == "active"}))
+				%input(type = "hidden" name = "threadState" value = "active")
+			- J.layout("formButton", Map("action" -> J.buildUri("/monitoring/thread/{serverName}", serverName), "label" -> "message:monitoring.thread.idle.button", "cssClass" -> "bt2", "method" -> "post", "name" -> "changeState", "disabled" -> {threadState == "idle"}))
+				%input(type = "hidden" name = "threadState" value = "idle")
+			- J.layout("formButton", Map("action" -> J.buildUri("/monitoring/thread/{serverName}", serverName), "label" -> "message:monitoring.thread.blocked.button", "cssClass" -> "bt2", "method" -> "post", "name" -> "changeState", "disabled" -> {threadState == "blocked"}))
+				%input(type = "hidden" name = "threadState" value = "blocked")
+			- J.layout("formButton", Map("action" -> J.buildUri("/monitoring/thread/{serverName}", serverName), "label" -> "message:monitoring.thread.reconn.button", "cssClass" -> "bt2", "method" -> "post", "name" -> "changeState", "disabled" -> {threadState == "reconn"}))
+				%input(type = "hidden" name = "threadState" value = "reconn")
+		- if (model != null)
+			- model.filter(_.isVisible).zipWithIndex.foreach
+				- case (data, index) =>
+					- if (index % 2 == 0)
+						- val customRow = (index: Int, row: List[Any]) =>
+							- if (detail != null && detail._1 == (row(0) + ""))
+								%tr
+									%td.content(colspan="#{data.getDisplayNames.size + 1}")
+										%pre<
+											~ detail._2
+						= Tabular.render(null, data, customRow = customRow)
+							- case (0, dns) =>
+								- Item(dns(0))
+									- (index, row) =>
+										- if (detail != null && detail._1 == (row(0) + ""))
+											- val url = J.buildUri("/monitoring/thread/{serverName}", serverName)
+											%a(href="#{url}") = row(0)
+										- else
+											- val url = J.buildUri("/monitoring/thread/{serverName}/{tid}", serverName, row(0))
+											%a(href="#{url}") = row(0)
+							- case (20, dns) =>
+								- Item("message:header.command", "90px", "center")
+									- (index, row) =>
+										- val url = J.buildUri("/monitoring/thread/{serverName}/{tid}", serverName, row(0))
+										- J.render("formButton", Map("cssClass" -> "bt2", "method" -> "post", "label" -> "message:monitoring.thread.interrupt.button", "action" -> url))
+					- else
+						= Tabular.render(null, data)()
+
+- J.init
+	:&plain
+		require(["jeus/scroll"], function(scroll) {
+			scroll("#{contextPath}/monitoring/thread");
+		});

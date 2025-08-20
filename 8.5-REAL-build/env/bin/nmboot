@@ -1,0 +1,2 @@
+LOGDATE=`date "+%y%m%d%H%M%S"`
+nohup startNodeManager > $JEUS_LOG_HOME/nodeManager/nm_$LOGDATE.log &

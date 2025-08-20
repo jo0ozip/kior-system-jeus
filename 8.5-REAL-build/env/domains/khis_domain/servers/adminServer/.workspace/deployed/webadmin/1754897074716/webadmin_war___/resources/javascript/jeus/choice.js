@@ -1,0 +1,1 @@
+define(["jquery","jeus/radio","lodash"],function(e,t,n){return function(){var r,i,s,o,u,a,f,l;s=e("input.eventChange[type='radio']"),u=n.uniq(s.map(function(){return e(this).attr("name")}).get()),l=[];for(a=0,f=u.length;a<f;a++)o=u[a],i=e("input[name='"+o+"']"),r=i.first(),i.is(":checked")||r.attr("checked","checked"),l.push(t(r));return l}});

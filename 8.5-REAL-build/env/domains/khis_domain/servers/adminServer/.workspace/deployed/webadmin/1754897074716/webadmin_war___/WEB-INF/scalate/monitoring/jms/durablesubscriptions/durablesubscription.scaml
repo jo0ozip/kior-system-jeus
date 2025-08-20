@@ -1,0 +1,139 @@
+-@ val targets: List[String]
+-@ val targetName: String
+-@ val target: String = null
+-@ val model: List[TabularData] = null
+-@ val detail: (String, String, List[TabularData]) = null
+
+-@ val destinations: List[String] = Nil
+
+- layout("/scalate/layouts/main.scaml", Map("description" -> "message:monitoring.jms.durablesubscriptions.description", "title" -> "message:monitoring.jms.durablesubscriptions"))
+	- J.base = "monitoring.jms.durablesubscriptions"
+	- render("/scalate/menu/monitoring/jms.scaml", Map("first" -> 1, "second" -> {if(targetName == "server") 0 else 1}))
+
+	- J.layout("accordian", Map("items" -> targets, "selected" -> target, "baseUri" -> {"/monitoring/jms/durable/" + targetName}), true)
+		- if (model != null)
+			- model.foreach
+				- data =>
+					= Tabular.render(null, data)
+						- case (20, dns) =>
+							- Item(null, "75px")
+								- (index, row) =>
+									- val url = J.buildUri("/monitoring/jms/durable/{targetName}/{target}/{durablesubscriptionName}/{clientId}", targetName, target, row(0), row(1))
+									- J.dialog("formButton", Map("label" -> "message:monitoring.jms.messages.browse.button", "cssClass" -> "bt2", "action" -> {url + "/messages"}, "method" -> "post"))
+										%article
+											%h2.title
+												= S.message("monitoring.jms.message.list.title")
+											%form(method="post" action='#{url + "/messages"}')
+												- J.layout("basic")
+													.table
+														- J.field(label = "message:monitoring.jms.messages.browse.selector.label", description = "message:monitoring.jms.messages.browser.selector")
+															%input(name="selector")
+														- J.field(label = "message:common.id.label", description = "message:monitoring.jms.messages.browser.id")
+															%input(name="id")
+														- J.field(label = "message:common.type.label", description = "message:monitoring.jms.messages.browser.type")
+															%select(name="type")
+																%option(value="")
+																%option(value="Text") Text
+																%option(value="Stream") Stream
+																%option(value="Map") Map
+																%option(value="Bytes") Bytes
+																%option(value="Object") Object
+																%option(value="File") File
+																%option(value="MessageGoup") MessageGoup
+														- J.field(label = "message:monitoring.jms.messages.browse.from.label", description = "message:monitoring.jms.messages.browser.from")
+															%input(name="from")
+														- J.field(label = "message:monitoring.jms.messages.browse.to.label", description = "message:monitoring.jms.messages.browser.to")
+															%input(name="to")
+
+		- if (detail != null)
+			- if (detail._1 == "detail")
+				- detail._3.foreach
+					- data =>
+						= Tabular.render(null, data)()
+			- else
+				- detail._3.foreach
+					- data =>
+						- val durablesubscriptionName = attributes("durablesubscriptionName")
+						- val clientId = attributes("clientId")
+						- val url = J.buildUri("/monitoring/jms/durable/{targetName}/{target}/{durablesubscriptionName}/{clientId}/messages", targetName, target, durablesubscriptionName, clientId)
+						%form(method="post" action='#{url}')
+							%input(id="mquerySelector" type="hidden" name="selector" value='#{parameter("selector")}')
+							%input(id="mqueryId" type="hidden" name="id" value='#{parameter("id")}')
+							%input(id="mqueryType" type="hidden" name="type" value='#{parameter("type")}')
+							%input(id="mqueryFrom" type="hidden" name="from" value='#{parameter("from")}')
+							%input(id="mqueryTo" type="hidden" name="to" value='#{parameter("to")}')
+							- val footer = (footer: String) =>
+								- val regex = """\[(\d+?) - (\d+?) / total: (\d+?)\]""".r
+								- footer match
+									- case regex(offset, last, total) =>
+										- val size: Int = attributeOrElse("size", "20").toInt
+										- J.render("paging", Map("offset" -> offset.toInt, "size" -> size, "last" -> last.toInt, "total" -> total.toInt))
+									- case _ =>
+										= footer
+							- val tid = "table_" + J.newID
+							= Tabular.render(tid, data, customFooter = footer)
+								- case (-1, dns) =>
+									- Item.checkall("#" + tid, "selectedMessages", "30px")(_(0).toString)
+								- case (0, dns) =>
+									- Item(dns(0))
+										- (index, row) =>
+											- val messageUrl = Utils.buildUri(url + "/{messageId}", row(0))
+											%a(href="#{messageUrl}") = row(0)
+							.buttonGroup
+								- J.dialogWithFunction("button", Map("label" -> "message:monitoring.jms.messages.delete.button", "cssClass" -> "bt2", "name" -> "remove"))
+									- (dialogId: String) =>
+										%article
+											%h2.title
+												= S.message("monitoring.jms.message.delete.title")
+											%form(method="post" action='#{url}')
+												.hidden
+												%input(type="hidden" name="remove" value="remove")
+												- J.layout("basic")
+													.table
+														- J.field(label = "message:monitoring.jms.messages.common.all.label", description = "message:monitoring.jms.messages.remove.all")
+															%input(type="checkbox" name="all")
+										- J.init
+											:&plain
+												require(["page/monitoring/jms"], function(jms){
+													jms.remove("#{dialogId}");
+												});
+								- J.dialogWithFunction("button", Map("label" -> "message:monitoring.jms.messages.move.button", "cssClass" -> "bt2", "name" -> "move"))
+									- (dialogId: String) =>		
+										%article
+											%h2.title
+												= S.message("monitoring.jms.message.move.title")
+											%form(method="post" action='#{url}')
+												.hidden
+												%input(type="hidden" name="move" value="move")
+												- J.layout("basic")
+													.table
+														- J.field(label = "message:monitoring.jms.messages.move.target.label", description = "message:monitoring.jms.messages.move.target", alert = "message:monitoring.jms.messages.move.target.alert")
+															%select(name="target")
+																- destinations.foreach
+																	- destination =>
+																		%option(value="#{destination}") = destination
+														- J.field(label = "message:monitoring.jms.messages.common.all.label", description = "message:monitoring.jms.messages.move.all")
+															%input(type="checkbox" name="all")
+										- J.init
+											:&plain
+												require(["page/monitoring/jms"], function(jms){
+													jms.move("#{dialogId}");
+												});
+								- J.dialogWithFunction("button", Map("label" -> "message:monitoring.jms.messages.export.button", "cssClass" -> "bt2", "name" -> "export"))
+									- (dialogId: String) =>		
+										%article
+											%h2.title
+												= S.message("monitoring.jms.message.export.title")
+											%form(method="post" action='#{url}')
+												.hidden
+												%input(type="hidden" name="export" value="export")
+												- J.layout("basic")
+													.table
+														- J.field(label = "message:monitoring.jms.messages.common.all.label", description = "message:monitoring.jms.messages.export.all")
+															%input(type="checkbox" name="all")
+										- J.init
+											:&plain
+												require(["page/monitoring/jms"], function(jms){
+													jms.export("#{dialogId}");
+												});
+

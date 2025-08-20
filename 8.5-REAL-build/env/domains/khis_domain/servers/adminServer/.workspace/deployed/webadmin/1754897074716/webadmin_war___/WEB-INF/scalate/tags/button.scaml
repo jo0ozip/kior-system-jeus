@@ -1,0 +1,37 @@
+-@ val buttonId: String = "button_" + J.newID
+-@ val disabled: Boolean = false
+-@ val label: String
+-@ val cssClass: String = null
+-@ val name: String = null
+-@ val btype: String = null
+-@ val bvalue: String = null
+-@ val requiredRoles: List[String] = Nil
+
+-@ val confirm: Boolean = false
+-@ val message: String = "message:common.confirm.message"
+
+-@ val dialogId: String = null
+-@ val dialogTemplateUri: String = null
+-@ val dialogWidth: Int = 550
+-@ val dialogRenderUri: String = J.buildUri("/render")
+
+-@ val dialogParams: Map[String, Any] = Map()
+
+-@ val appendTarget: String = null
+
+- val _runtime: String = attributeOrElse("__runtime", null)
+- val _disabled: Boolean = disabled || !SS.anyGranted(requiredRoles, true) || hasText(_runtime)
+
+- if(confirm)
+	%button.button.confirm{:type => btype, :name => name, :value => bvalue, :disabled => _disabled, :class => cssClass, :id => buttonId, 'data-message' => {J.message(message)}, "data-append-target" => appendTarget}
+		%span.button-text = J.message(label)
+- else if(hasText(dialogTemplateUri))
+
+	%button.button.dialogButton{:type => btype, :name => name, :value => bvalue, :disabled => _disabled, :class => cssClass, :id => buttonId, "data-dialog-template-uri" => dialogTemplateUri, "data-dialog-render-uri" => dialogRenderUri, "data-dialog-width" => dialogWidth, "data-params" => {Utils.serialize(dialogParams)}, "data-append-target" => appendTarget}
+		%span.button-text = J.message(label)
+- else if(hasText(dialogId))
+	%button.button.dialogButton{:type => btype, :name => name, :value => bvalue, :disabled => _disabled, :class => cssClass, :id => buttonId, "data-dialog-id" => dialogId, "data-dialog-render-uri" => dialogRenderUri, "data-dialog-width" => dialogWidth, "data-append-target" => appendTarget}
+		%span.button-text = J.message(label)
+- else
+	%button.button{:type => btype, :name => name, :value => bvalue, :disabled => _disabled, :class => cssClass, :id => buttonId}
+		%span.button-text = J.message(label)

@@ -1,0 +1,24 @@
+-@ val method: String = "get"
+-@ val action: String = requestUri
+-@ val body: String = null
+-@ val name: String = null
+
+- def form(method: String, hMethod: String)
+	%form.formButton(action="#{action}" method="#{method}")
+		- if (hasText(name))
+			%input{:type => "hidden", :value => name, :name => name}
+		- if (hMethod != null)
+			%input(type="hidden" value="#{hMethod}" name="_method")
+		- if(hasText(body))
+			!= body
+		- J.render("button", Map("name" -> null))
+
+- method match
+	- case "get" =>
+		- form("get", null)
+	- case "post" =>
+		- form("post", null)	
+	- case "delete" =>
+		- form("post", "delete")	
+	- case "put" =>
+		- form("post", "put")

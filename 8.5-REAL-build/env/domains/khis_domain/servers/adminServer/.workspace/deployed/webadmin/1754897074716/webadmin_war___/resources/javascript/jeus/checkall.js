@@ -1,0 +1,1 @@
+define(["jquery","jeus/toggle"],function(e,t){return function(n,r){return t(".checkall",n,r,function(t,n){return t?e(n).not(":disabled").prop("checked",!0):e(n).not(":disabled").prop("checked",!1)},function(e){return e.is(":checked")})}});

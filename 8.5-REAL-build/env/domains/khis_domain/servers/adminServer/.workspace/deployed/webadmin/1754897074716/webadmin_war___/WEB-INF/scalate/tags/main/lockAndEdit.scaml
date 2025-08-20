@@ -1,0 +1,54 @@
+- import org.springframework.util.StringUtils.hasText
+- import jeus.tool.webadmin.Current
+- import jeus.tool.webadmin.Settings
+
+-@ val domainDescription: String = null
+
+%aside#mainLockAndEdit
+	%h2
+		= S.message("configuration.lockAndEdit.start")
+	- val autoLock: Boolean = S.eval[Settings]("@settings").autoLock
+	- if (autoLock)
+		%p = S.message("configuration.lockAndEdit.autoLock.description")
+	- else
+		- (hasLock, S.eval[Current]("@current").runtime) match 
+			- case (true, _) => 
+				%ul
+					%li.first
+						- J.render("button", Map("label" -> "message:configuration.lockAndEdit.runtime", "btype" -> "submit", "cssClass" -> "bt_disabled", "disabled" -> true))
+					%li
+						- J.dialog("formButton", Map("label" -> "message:configuration.lockAndEdit.activate", "action" -> uri("/lockAndEdit/activate"), "cssClass" -> "bt_s4", "btype" -> "submit", "method" -> "post"))	
+							%article
+								%h2.title
+									= S.message("configuration.lockAndEdit.activate")
+								.description
+									= S.message("configuration.lockAndEdit.activate.confirm")
+								%form(method="post" action='#{uri("/lockAndEdit/activate")}')
+									- J.layout("basic")
+										.table
+											- J.field(schema = "domain.description", path = "description", noBinding = true)
+												%textarea(name="description")<
+													~ domainDescription
+					%li
+						- J.render("formButton", Map("label" -> "message:configuration.lockAndEdit.cancel", "action" -> uri("/lockAndEdit/cancel"), "cssClass" -> "bt_s4", "btype" -> "submit", "method" -> "post", "confirm" -> true, "message" -> "message:configuration.lockAndEdit.cancel.confirm"))
+				%p
+					!= S.message("configuration.lockAndEdit.activate.description")
+			- case (_, runtime) if hasText(runtime) =>
+				%ul
+					%li.first
+						- J.render("formButton", Map("label" -> "message:configuration.lockAndEdit.runtime.cancel", "action" -> uri("/runtime/cancel"), "cssClass" -> "bt_s4", "btype" -> "submit", "method" -> "post"))
+					%li
+						- J.render("button", Map("label" -> "message:configuration.lockAndEdit.start", "name" -> "start", "btype" -> "submit", "cssClass" -> "bt_disabled", "disabled" -> true))
+				%p
+					!= S.message("configuration.runtime.start.description", List(runtime))
+			- case _ =>
+				%ul
+					%li.first
+						- J.render("formButton", Map("label" -> "message:configuration.lockAndEdit.runtime", "action" -> uri("/runtime"), "cssClass" -> "bt_s4", "btype" -> "submit", "method" -> "get"))
+
+					%li
+						- J.render("formButton", Map("label" -> "message:configuration.lockAndEdit.start", "action" -> uri("/lockAndEdit/start"), "cssClass" -> "bt_s4", "btype" -> "submit", "method" -> "post"))
+
+				%p
+					!= S.message("configuration.lockAndEdit.start.description")
+		

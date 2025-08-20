@@ -1,0 +1,15 @@
+-@ val from: String = requestUri
+
+%article#pageSearch
+	%h1
+		= S.message("common.search.title")
+	%form.search(action="#{contextPath}/search" method="post")
+		%input(type="hidden" name="from" value="#{from}")
+		%ul
+			%li.query
+				%input(type="text" name="query")
+			%li.submit
+				%input(type="submit" name="search" title='#{S.message("common.search.title")}')
+	#pageSearchResult
+	- J.init
+		require(["jeus/search"]);

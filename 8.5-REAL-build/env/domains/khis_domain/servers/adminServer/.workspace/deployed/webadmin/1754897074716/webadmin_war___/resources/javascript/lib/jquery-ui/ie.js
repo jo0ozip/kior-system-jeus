@@ -1,0 +1,1 @@
+(function(e){typeof define=="function"&&define.amd?define(["jquery","./version"],e):e(jQuery)})(function(e){return e.ui.ie=!!/msie [\w.]+/.exec(navigator.userAgent.toLowerCase())});

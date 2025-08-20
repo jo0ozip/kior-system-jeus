@@ -1,0 +1,43 @@
+-@ val domainName: String
+-@ val credentialVerificationList: List[SecurityServiceType] = Nil
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("base"-> "domain.security-manager.security-domains.security-domain.credential-verification", "title" -> "message:security.credentialverification.title"))
+	- J.base = "domain.security-manager.security-domains.security-domain.credential-verification"
+	- render("/WEB-INF/scalate/menu/security.scaml", Map("first" -> 3, "second" -> 4))
+
+	%form(method="post" action="#{requestUri}")
+
+		- J.render("fieldIcons")
+		- J.render("buttons", Map("addition" -> List("delete")))
+
+		- J.layout("basic")
+			.table
+			- J.group(schema = ".default-credential-verification-service")
+				.table
+					- J.field(schema = ".password-verification")
+						- J.checkbox()
+					- J.field(schema = ".jeus-certificate-verification")
+						- J.checkbox()
+
+
+		.lineBar
+		- J.render("buttons", Map("addition" -> List("delete")))
+
+	- J.layout("subMain", Map("title" -> "message:security.credentialverification.custom.title"))
+		- J.base = J.base + ".custom-credential-verification-service"
+		= Table.render(null, credentialVerificationList)
+			- case 1 =>
+				- Item("message:header.classname")
+					- (index, row) =>
+						- val url = J.buildUri("/security/{domainName}/securityservice/credentialverification/service/{classname}", domainName, row.getClassname)
+						%a(href="#{url}") = row.getClassname
+			- case 2 =>
+				- Item("90px", List("center"),
+					- Head
+						- () =>
+							- val url = J.buildUri("/security/{domainName}/securityservice/credentialverification/service", domainName)
+							- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "button bt_add", "name" -> "create", "disabled" -> !hasLock, "action" -> url))
+				- )
+					- (index, row) =>
+						- val url = J.buildUri("/security/{domainName}/securityservice/credentialverification/service/{classname}", domainName, row.getClassname)
+						- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "button bt_del", "disabled" -> !hasLock, "action" -> url))

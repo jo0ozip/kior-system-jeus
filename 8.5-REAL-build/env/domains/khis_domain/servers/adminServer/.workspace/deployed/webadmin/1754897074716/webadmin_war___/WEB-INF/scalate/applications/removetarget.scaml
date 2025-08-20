@@ -1,0 +1,48 @@
+- import jeus.tool.webadmin.Environment
+- val jEnv = S.eval[Environment]("@j_env")
+
+-@ val id: String
+-@ val action: String
+-@ val virtualHosts: List[String] = Nil
+-@ val servers: List[String] = Nil
+-@ val clusters: List[String] = Nil
+
+%article
+	- J.base = "domain.deployed-applications.deployed-application"
+
+	%h2.title
+		= J.title("message:applications.remove.target.title", J.base)
+
+	%form(method="post" action="#{action}")
+		- J.layout("basic")
+			.table
+				- J.field(label = "message:common.servers.label", description = "message:removetarget.targets.id")
+					= id
+					%input(type="hidden" name="id" value="#{id}")
+			- J.group(label = "message:applications.application.targets.label")
+				.table
+					- J.field(label = "message:common.id.label", description = "message:removetarget.targetServers")
+						- if (servers == Nil)
+							= S.message("common.noExist.entry")
+						- servers.foreach
+							- server =>
+								%label
+									%input(type="checkbox" name="servers" value="#{server}")
+									- J.render("printLabelFromServer", Map("name" -> server))
+								%br/
+					- if(!jEnv.isCloud)
+						- J.field(label = "message:common.clusters.label", description = "message:removetarget.targetClusters")
+							- if (clusters == Nil)
+								= S.message("common.noExist.entry")
+							- clusters.foreach
+								- cluster =>
+									%label
+										%input(type="checkbox" name="clusters" value="#{cluster}")
+										= cluster
+									%br/
+					- J.field(label = "message:applications.removetarget.targets.virtualhost.label", description = "message:removetarget.targets.virtualhost")
+						%select(name="virtualHost")
+							%option(value="")
+							- virtualHosts.foreach
+								- virtualHost =>
+									%option(value="#{virtualHost}") = virtualHost

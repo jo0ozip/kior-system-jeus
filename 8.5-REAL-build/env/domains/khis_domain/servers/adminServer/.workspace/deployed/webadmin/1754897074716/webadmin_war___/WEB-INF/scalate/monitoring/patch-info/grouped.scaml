@@ -1,0 +1,30 @@
+-@ val grouped: Map[String, List[String]]
+
+- if(!grouped.isEmpty)
+	- val allColumns: List[String] = grouped.values.flatten.toSet.toList.sorted
+	%h2.title
+		= S.message("monitoring.patch-info.title")
+	%div(style="overflow-x: auto")
+		%table.tableType
+			%thead
+				%tr
+					%th.first(style="min-width: 250px")
+						Patch File Name
+					- allColumns.foreach
+						- column =>
+							%th
+								= column
+			%tbody
+				- grouped.toList.sortBy(_._1).foreach
+					- case (patch, columns) =>
+						%tr
+							%td.first
+								= patch
+							- allColumns.foreach
+								- column =>
+									%td.center
+										- if(columns.contains(column))
+											O
+
+
+

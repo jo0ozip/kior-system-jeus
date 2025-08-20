@@ -1,0 +1,57 @@
+-@ val __listenerNames: List[String] = Nil
+-@ val serverName: String
+-@ val model: ListenersType
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("base" -> "domain.servers.server.listeners", "title" -> "message:servers.listeners.title"))
+	- J.base = "domain.servers.server.listeners"
+	- val isReadonly = if(isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 1, "second" -> 0))
+
+	%form(method="post" action="#{requestUri}")
+
+		- J.render("fieldIcons")
+		- var basic = "disabledbasic"
+		- if(!isReadonly)
+			- J.render("buttons", Map("addition" -> List("delete")))
+			- basic = "basic"
+
+		- J.layout(basic)
+			.table
+				- J.field(schema = ".base")
+					- J.select(options = null :: __listenerNames)
+
+
+		.lineBar
+		- if(!isReadonly)
+			- J.render("buttons", Map("addition" -> List("delete")))
+
+	%h2.title
+		= S.message("servers.listener.title")
+	= Table.render(null, model.getListener.asScala.toList)
+		- case 1 =>
+			- Item("message:header.name")
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{server}/resource/listeners/listener/{name}", serverName, row.getName())
+					%a(href="#{url}") = row.getName()
+		- case 2 =>
+			- Item("message:header.listen-address", "30%")
+				- (index, row) =>
+					= row.getListenAddress
+		- case 3 =>
+			- Item("message:header.listen-port", "30%")
+				- (index, row) =>
+					= row.getListenPort
+		- case 4 =>
+			- Item("90px", List("center"),
+				- Head
+					- () =>
+						- val url = J.buildUri("/servers/{server}/resource/listeners/listener", serverName)
+						- J.render("formButton", Map("label" -> "message:common.add.button", "action" -> url, "name" -> "create", "cssClass" -> "bt_add", "disabled" -> {!hasLock || isReadonly}))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{server}/resource/listeners/listener/{name}", serverName, row.getName())
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "action" -> url, "method" -> "delete", "cssClass" -> "bt_del", "disabled" -> {!hasLock || isReadonly}))				
+

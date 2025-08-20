@@ -1,0 +1,18 @@
+-@ var body: String
+-@ var base: String = J.base
+-@ var title: String = null
+-@ var description: String = null
+-@ var help: String = base
+-@ var alert: String = null
+
+
+- J.render("history")
+
+- J.render("topScript")
+
+%section
+	%h1.title
+		= J.title(title, base)
+
+	- J.render("description", Map("description" -> J.message(description, base, "[Description]"), "helpUrl" -> help, "alert" -> alert))
+	!= body

@@ -1,0 +1,46 @@
+- import jeus.tool.webadmin.controller.monitoring.ListSessionVO
+
+-@ val model: List[TabularData] = Nil
+-@ val serverName: String = null
+-@ val targetName: String = null
+-@ val params: ListSessionVO = ListSessionVO(false, null)
+
+- layout("/scalate/layouts/main.scaml", Map("description" -> "message:monitoring.webinfo.description", "title" -> "message:monitoring.webinfo.title"))
+	- J.base = "monitoring.webinfo"
+
+	- render("/scalate/menu/monitoring/web.scaml", Map("selected" -> 1))
+	
+	- val customHeader = 
+		- (name: String, selected: Boolean) =>
+			- if (selected)
+				- var url = J.buildUri("/monitoring/web/listsession/{serverName}", name)
+				- if(targetName != null)
+					- url = J.buildUri("/monitoring/web/listsession/{serverName}/{targetName}", name, targetName)
+				%form(action="#{url}" method="post")
+					%label						
+						= S.message("monitoring.web.listsession.simple")
+						- val simple = params.simple
+						%input{:type => "checkbox", :name => "simple", :checked => simple}
+					%label
+						= S.message("monitoring.web.listsession.count")
+						%input(name="count" type="text" placeholder="100" value="#{params.count}")						
+
+					- J.render("button", Map("btype" -> "submit", "label" -> "message:common.change.button", "cssClass" -> "bt2"))
+
+	- J.layout("accordian", Map("selected" -> serverName, "baseUri" -> "/monitoring/web/listsession", "customAccordianHeader" -> customHeader), true)
+		- if (model != null)
+			- model.foreach
+				- data =>
+					- if(data.getDisplayNames.asScala.length > 6)
+						= Tabular.render(null, data)
+							- case (1, displayNames) =>
+								- Item(displayNames(1), "170px")
+									- (index, row) =>
+										=row(1)
+							- case (6, displayNames) =>
+								- Item(displayNames(6), "160px")
+									- (index, row) =>
+										%pre(style="height:80px; overflow:auto;")=row(6)
+					- else
+						= Tabular.render(null, data)()
+	

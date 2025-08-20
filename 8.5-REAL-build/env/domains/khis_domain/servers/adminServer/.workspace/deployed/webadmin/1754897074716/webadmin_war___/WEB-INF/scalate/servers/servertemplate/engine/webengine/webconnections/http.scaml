@@ -1,0 +1,89 @@
+-@ val createMode: Boolean = false
+-@ val model: HttpListenerType
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:server.web-engine.web-connections.http-listener.title"))
+	- J.base = "domain.server-templates.server-template.web-engine.web-connections.http-listener"
+	- render("/WEB-INF/scalate/menu/server-template.scaml", Map("first" -> 2, "second" -> 0, "third" -> 3))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".name")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getName
+				- J.field(schema = ".output-buffer-size")
+					- J.input()
+					%span.unit byte
+
+			- J.group(schema = ".thread-pool")
+				.table	
+					- J.field(schema = ".max-idle-time")
+						- J.input()
+					- J.field(schema = ".max-queue")
+						- J.input()
+				- J.group(label= "message:server.web-engine.web-connections.http-listener.threadpoolsize")
+					.table
+					- val isAutotuning = if(model.getThreadPool().isSetUseAutoTuning() && model.getThreadPool().getUseAutoTuning()) true else false
+					
+					- J.group(label= "message:server.web-engine.web-connections.http-listener.default", path = "", noBinding = false, attributes = Map("front" -> "hidechoice", "choiceGroup" -> "autoTuning", "checked" -> !isAutotuning))
+						.table
+							- J.field(schema = ".min")
+								- J.input()
+							- J.field(schema = ".max")
+								- J.input()
+					- J.group(schema = ".use-auto-tuning", noBinding = false, attributes = Map("front" -> "hidechoice", "choiceGroup" -> "autoTuning", "checked" -> isAutotuning))
+						.hidden
+							%input(type="hidden" name="threadPool.min" value="1")
+							%input(type="hidden" name="threadPool.max" value="1")
+							%input(type="hidden" name="threadPool.useAutoTuning" value="true")
+						.table
+							- J.field(path="threadPool.limit", label = "message:server.web-engine.web-connections.http-listener.autotuning.limit.label", description = "message:server.web-engine.web-connections.http-listener.autotuning.limit.description")
+								- J.input()
+				- J.group(schema = ".thread-state-notify")
+					.table
+						- J.field(schema = ".max-thread-active-time")
+							- J.input()
+							%span.unit = S.message("common.ms")
+						- J.field(schema = ".notify-threshold-ratio")
+							- J.input()
+						- J.field(schema = ".restart-threshold-ratio")
+							- J.input()
+						- J.field(schema = ".notify-subject")
+							- J.input()
+						- J.field(schema = ".restart-subject")
+							- J.input()
+						- J.field(schema = ".interrupt-thread")
+							- J.checkbox()
+						- J.field(schema = ".active-timeout-notification")
+							- J.checkbox()
+
+		- J.layout("advanced")
+			.table
+			- layout("common.scaml")
+				- J.field(schema = ".connection-type")
+					- J.select()
+				- J.field(schema = ".server-access-control")
+					- J.checkbox()
+				- J.field(schema = ".allowed-server")
+					- J.textarea()
+			- J.group(schema = ".http2", noBinding = false, attributes = Map("tail" -> "checkboxForGroup"))
+				.table
+					- J.field(schema = ".settings-enable-push")
+						- J.checkbox()
+					- J.field(schema = ".settings-max-concurrent-streams")
+						- J.input()
+					- J.field(schema = ".settings-max-frame-size")
+						- J.input()
+					- J.field(schema = ".settings-ack-timeout")
+						- J.input()
+
+		.lineBar
+		- J.render("buttons")
+

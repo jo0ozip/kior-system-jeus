@@ -1,0 +1,10 @@
+-@ var body: String 
+
+%div
+	!= J.header
+
+	!= body
+
+	!= J.footer
+	:&javascript
+		#{unescape(J.init)}

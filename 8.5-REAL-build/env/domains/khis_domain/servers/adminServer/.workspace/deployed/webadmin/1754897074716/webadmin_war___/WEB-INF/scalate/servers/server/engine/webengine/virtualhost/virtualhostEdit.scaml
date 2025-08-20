@@ -1,0 +1,64 @@
+-@ val createMode: Boolean = false
+-@ val model: VirtualHostType
+
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:servers.virtual-host.title"))
+	- J.base = "domain.servers.server.web-engine.virtual-host"
+	- val isReadonly = if(!createMode && isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 2, "second" -> 0, "third" -> 2, "fourth" -> 0))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- var basic = "disabledbasic"
+		- if(!isReadonly)
+			- J.render("buttons")
+			- basic = "basic"
+
+		- J.layout(basic)
+			.table
+				- J.field(schema = ".virtual-host-name")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getVirtualHostName
+				- J.field(schema = ".host-name")
+					- J.textarea()
+				- J.field(schema = ".attach-stacktrace-on-error")
+					- J.checkbox()					
+		- J.layout("advanced")
+			.table
+				- J.field(example = "message:common.ex.key_equal_value", schema = ".properties", path = "properties.property")
+					- J.textarea()			
+			- J.group(schema = ".encoding")
+				.table
+				- J.group(schema = ".request-encoding", noBinding = false, attributes = Map("tail" -> "checkboxForGroup"))
+					.table
+						- J.field(schema = ".default", attributes = Map("front" -> "choice", "choiceGroup" -> "request-encodingGroup"))
+							- J.input()
+						- J.field(schema = ".client-override", attributes = Map("front" -> "choice", "choiceGroup" -> "request-encodingGroup"))
+							- J.input()
+						- J.field(schema = ".forced", attributes = Map("front" -> "choice", "choiceGroup" -> "request-encodingGroup"))
+							- J.input()
+				- J.group(schema = ".response-encoding", noBinding = false, attributes = Map("tail" -> "checkboxForGroup"))
+					.table
+						- J.field(schema = ".default", attributes = Map("front" -> "choice", "choiceGroup" -> "response-encodingGroup"))
+							- J.input()
+						- J.field(schema = ".forced", attributes = Map("front" -> "choice", "choiceGroup" -> "response-encodingGroup"))
+							- J.input()
+			- J.group(schema = ".cookie-policy")
+				.table
+				- J.group(schema = ".write-value-on-header-policy")
+					.table
+						- J.field(schema = ".apply-url-encoding-rule")
+							- J.checkbox()
+						- J.field(schema = ".charset-encoding")
+							- J.input()
+
+		.lineBar
+		- if(!isReadonly)
+			- J.render("buttons")

@@ -1,0 +1,13 @@
+-@ val page: String
+
+- J.deferred("topScript")
+	%ul
+		%li
+			%button#pageRefresh.pageRefresh refresh
+
+- J.init
+	:&plain
+		require(["jeus/refresh"], function(refresh){
+			refresh("#{page}");
+		});
+	

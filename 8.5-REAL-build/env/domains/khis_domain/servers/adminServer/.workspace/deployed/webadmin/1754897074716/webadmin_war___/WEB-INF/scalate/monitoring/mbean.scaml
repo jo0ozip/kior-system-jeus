@@ -1,0 +1,11 @@
+-@ val serverName: String = null
+-@ val model: List[TabularData] = null
+
+- layout("/scalate/layouts/main.scaml", Map("description" -> "message:monitoring.mbean.description", "title" -> "message:monitoring.mbean.title"))
+	- J.base = "monitoring.mbean"
+
+	- J.layout("accordian", Map("selected" -> serverName, "baseUri" -> "/monitoring/mbean"), true)
+		- if (model != null)
+			- model.foreach
+				- data =>
+					= Tabular.render(null, data)()

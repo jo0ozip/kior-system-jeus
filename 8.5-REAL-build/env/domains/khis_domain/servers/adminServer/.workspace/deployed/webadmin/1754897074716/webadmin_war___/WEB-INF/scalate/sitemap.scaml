@@ -1,0 +1,78 @@
+- import jeus.tool.webadmin.controller.Datasource
+
+- import jeus.tool.webadmin.tags.Sitemap
+
+-@ val servers: List[ServerType] = Nil
+-@ val datasources: List[Datasource] 
+-@ val applications: Either[String, TabularData]
+-@ val clusters: List[ClusterType] 
+-@ val securityDomains: List[SecurityDomainType]
+
+- val DEPLOYED: String = S.message("level.DEPLOYED")
+- val INSTALLED: String = S.message("level.INSTALLED")
+- 
+	val properties = 
+		Map(
+			"server" -> servers.map(_.getName),
+			"datasource" -> datasources.map(_.dataSourceId),
+			"cluster" -> clusters.map(_.getName),
+			"securityDomain" -> securityDomains.map(_.getName),
+			"application" -> {
+				applications.fold(
+					message => Nil,
+					data =>
+						data.getRows.asScala.filter { row =>
+							row.get(2) match {
+								case INSTALLED | DEPLOYED => false
+								case _ => true
+							}
+						} map { row =>
+							row.get(0).toString
+						} toList
+				)
+			}
+		)
+
+- val PatternURL = """.+\{(.+)\}.*""".r
+
+- def renders(mainClass: String, subClass: String, prefix: String, sitemaps: List[Sitemap])
+	- sitemaps match
+		- case null | Nil => 
+		- case _ =>
+			%ul{:class => mainClass}
+				- sitemaps.foreach { sitemap =>
+					= render(subClass, prefix, sitemap)
+				- }
+
+- def renderMenu(cssClass: String, url: String, label: String, container: Boolean, horizontal: Boolean, children: List[Sitemap])
+	%li
+		- if(container == false)
+			%a{:class => cssClass, :href => {uri(url)}}
+				= S.message(label)
+		- else
+			%span{:class => cssClass}
+				= S.message(label)
+		- if(horizontal)
+			= renders("horizontal", null, url, children)
+		- else
+			= renders(null, null, url, children)
+
+- def render(cssClass: String, prefix: String, sitemap: Sitemap)
+	- if(SS.anyGranted(sitemap.security))
+		- val url = prefix + sitemap.url
+		- url match
+			- case PatternURL(property) =>
+				- properties(property).foreach { p =>
+					- val modifiedUrl = Utils.buildUri(url, p)
+					- val label = sitemap.label.replaceAll("""\$\{name\}""", p)
+					= renderMenu(cssClass, modifiedUrl, label, sitemap.container, sitemap.horizontal, sitemap.children)
+				- }
+			- case _ =>
+				= renderMenu(cssClass, url, sitemap.label, sitemap.container, sitemap.horizontal, sitemap.children)
+
+
+
+- layout("/scalate/layouts/main.scaml", Map("description" -> "message:sitemap.description", "title" -> "message:sitemap.title"))
+	- J.base = "sitemap"
+
+	= renders("sitemap", "main", "", J.sitemap)

@@ -1,0 +1,47 @@
+-@ val __dataSources: List[String] = Nil
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:security.authentication.repository-service.title"))
+	- J.base = "domain.security-manager.security-domains.security-domain.authentication.repository-service"
+	- render("/WEB-INF/scalate/menu/security.scaml", Map("first" -> 3, "second" -> 0, "third" -> 0))
+
+	%form(method="post" action="#{requestUri}")
+
+		- J.render("fieldIcons")
+		- J.render("buttons", Map("addition" -> List("delete")))
+
+		- J.layout("basic")
+			.table
+			- J.group(schema = ".xml-file-repository", noBinding = false, attributes = Map("front" -> "choice", "choiceGroup" -> "repository-serviceGroup"))
+				.table
+				- J.group(schema = ".config-file")
+					.table
+						- J.field(schema = ".filename")
+							- J.input()
+						- J.field(schema = ".filepath")
+							- J.input()
+			- J.group(schema = ".database-repository", noBinding = false, attributes = Map("front" -> "choice", "choiceGroup" -> "repository-serviceGroup"))
+				.table
+					- J.field(schema = ".datasource-id", attributes = Map("front" -> "choice", "choiceGroup" -> "database-repositoryGroup"))
+						- J.select(options = null :: __dataSources)
+				- J.group(schema = ".dbdriver-config", noBinding = false, attributes = Map("front" -> "choice", "choiceGroup" -> "database-repositoryGroup"))
+					.table
+						- J.field(schema = ".vendor")
+							- J.input()
+						- J.field(schema = ".driver")
+							- J.input()
+						- J.field(schema = ".url")
+							- J.input()
+						- J.field(schema = ".username")
+							- J.input()
+						- J.field(schema = ".password")
+							- J.password()
+			- J.group(schema = ".custom-repository", noBinding = false, attributes = Map("front" -> "choice", "choiceGroup" -> "repository-serviceGroup"))
+				.table
+					- J.field(schema = ".classname")
+						- J.input()
+					- J.field(example = "message:common.ex.name_equal_value", schema = ".property")
+						- J.textarea()
+
+
+		.lineBar
+		- J.render("buttons", Map("addition" -> List("delete")))

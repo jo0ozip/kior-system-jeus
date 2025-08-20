@@ -1,0 +1,91 @@
+- import jeus.tool.webadmin.Environment
+- val jEnv = S.eval[Environment]("@j_env")
+
+-@ val model: TabularData = null
+
+-@ val allServers: List[String] = Nil
+-@ val allClusters: List[String] = Nil
+
+-@ val targets: Map[String, (List[String], List[String])]
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:menu.application.deployedlibrary"))
+	- J.base = "domain.deployed-libraries"
+
+	- render("/WEB-INF/scalate/menu/application.scaml", Map("selected" -> 1))
+
+	
+	- if(model != null)
+		= Tabular.sortable(null, model, false)
+			- case (-1, displayNames) =>
+				- Item(null, "30px")
+					- (index, row) =>
+						- val select = if(row(1)==null) row(0) else row(0) + " -version " + row(1)
+						%input(type="checkbox" name="selectedID" value=select class = "#{row(2)}")
+			- case (0, displayNames) =>
+				- Item(displayNames(0), "130px")
+					- (index, row) =>
+						- val DEPLOYED: String = S.message("level.DEPLOYED")
+						- val INSTALLING: String = S.message("level.INSTALLING")
+						- val INSTALLED: String = S.message("level.INSTALLED")
+						- row(2) match
+							- case INSTALLING | INSTALLED | DEPLOYED =>
+								= row(0)
+							- case _ =>
+								- val libraryVer = if(row(1)==null) "1.0" else row(1).toString
+								- val url = J.buildUri("/applications/deployedlibraries/{libraryID}/{libraryVer}", row(0), libraryVer)
+								%a(href="#{url}") = row(0)
+			- case (1, displayNames) =>
+				- Item(displayNames(1), "70px", "center")
+					- (index, row) =>
+						= row(1)
+			- case (2, displayNames) =>
+				- Item(displayNames(2), "90px", "center")
+					- (index, row) =>
+						= row(2)
+			- case (3, displayNames) =>
+				- Item(displayNames(3), "100px", "center")
+					- (index, row) =>
+						= row(3)
+			- case (4, displayNames) =>
+				- Item(displayNames(4), "100px", "center")
+					- (index, row) =>
+						= row(4)
+			- case (5, displayNames) =>
+				- Item(displayNames(5), "center")
+					- (index, row) =>
+						= row(5)
+			- case (20, displayNames) =>
+				- Item("150px", List("center"),
+					- Head
+						- () =>
+						- J.dialog("formButton", Map("name" -> "install", "label" -> "message:common.install.button", "cssClass" -> "bt_add", "action" -> J.buildUri("/applications/deployedlibraries", "install" -> "install")))
+							- J.render("/WEB-INF/scalate/applications/deployedlibrary/deployedlibraryInstall.scaml", Map("action" -> {J.buildUri("/applications/deployedlibraries", "install" -> "install")}))
+				- )
+					- (index, row) =>
+						- val DEPLOYED: String = S.message("level.DEPLOYED")
+						- val RUNNING: String = S.message("level.RUNNING")
+						- val libraryID = row(0).toString
+						- val libraryVer = if(row(1)==null) "1.0" else row(1).toString
+						- val url = J.buildUri("/applications/deployedlibraries/{libraryID}/{libraryVer}", libraryID, libraryVer)
+						- row(2) match
+							- case DEPLOYED | RUNNING=>
+								- J.render("formButton", Map("label" -> "message:common.undeploy.button", "action" -> url, "undeploy" -> "undeploy", "name" -> "undeploy", "cssClass" -> "bt_del", "disabled" -> hasLockAndNoAutoLock, "method" -> "post", "confirm" -> true, "message" -> "message:applications.library.undeploy.confirm.message"))
+							- case _ =>
+								- if(!jEnv.isCloud)
+									- J.render("formButton", Map("label" -> "message:common.deploy.button", "action" -> url, "deploy" -> "deploy", "name" -> "deploy", "cssClass" -> "bt_add", "disabled" -> hasLockAndNoAutoLock))
+								- else
+									- J.render("formButton", Map("label" -> "message:common.deploy.button", "action" -> url, "deploy" -> "deploy", "name" -> "deploy", "cssClass" -> "bt_add", "disabled" -> hasLockAndNoAutoLock, "method" -> "post", "confirm" -> true, "message" -> "message:applications.library.deploy.cloud.confirm.message"))
+								- J.render("formButton", Map("label" -> "message:common.uninstall.button", "action" -> url, "uninstall" -> "uninstall", "name" -> "uninstall", "cssClass" -> "bt_del", "disabled" -> hasLockAndNoAutoLock, "method" -> "post", "confirm" -> true, "message" -> "message:applications.library.uninstall.confirm.message"))
+
+		- J.init
+			:plain
+				require(["page/deployedlibraries"], function(deployedlibraries){ 
+					deployedlibraries.init(); 
+				});
+
+		.buttonGroup
+			- val url = J.buildUri("/applications/deployedlibraries")
+			- val deploy = "button_" + J.newID
+
+			- J.render("formButton", Map("label" -> "message:common.undeploy.button", "cssClass" -> "bt_del", "method" -> "post", "disabled" -> hasLockAndNoAutoLock, "action" -> url, "name" -> "undeploy", "confirm" -> true, "message" -> "message:applications.library.undeploy.confirm.message", "appendTarget" -> "input[name=selectedID]"))
+			- J.render("formButton", Map("label" -> "message:common.uninstall.button", "cssClass" -> "bt_del", "method" -> "post", "disabled" -> hasLockAndNoAutoLock, "action" -> url, "name" -> "uninstall", "confirm" -> true, "message" -> "message:applications.library.uninstall.confirm.message", "appendTarget" -> "input[name=selectedID]"))

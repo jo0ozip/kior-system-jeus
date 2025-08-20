@@ -1,0 +1,47 @@
+-@ val domainName: String
+-@ val auditList: List[SecurityServiceType] = Nil
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("base" -> "domain.security-manager.security-domains.security-domain.audit", "title" -> "message:security.audit.title"))
+	- J.base = "domain.security-manager.security-domains.security-domain.audit"
+	- render("/WEB-INF/scalate/menu/security.scaml", Map("first" -> 3, "second" -> 5))
+
+	%form(method="post" action="#{requestUri}")
+
+		- J.render("fieldIcons")
+		- J.render("buttons", Map("addition" -> List("delete")))
+
+		- J.layout("basic")
+			.table
+			- J.group(schema = ".default-audit-service")
+				.table
+					- J.field(schema = ".audit-level")
+						- J.input()
+				-J.group(schema = ".config-file")
+					.table
+						- J.field(schema = ".filename")
+							- J.input()
+						- J.field(schema = ".filepath")
+							- J.input()
+
+
+		.lineBar
+		- J.render("buttons", Map("addition" -> List("delete")))
+
+	- J.layout("subMain", Map("title" -> "message:security.audit.customservice.title"))
+		- J.base = J.base + ".custom-audit-service"
+		= Table.render(null, auditList)
+			- case 1 =>
+				- Item("message:header.classname")
+					- (index, row) =>
+						- val url = J.buildUri("/security/{domainName}/securityservice/audit/service/{classname}", domainName, row.getClassname)
+						%a(href="#{url}") = row.getClassname
+			- case 2 =>
+				- Item("90px", List("center"),
+					- Head
+						- () =>
+							- val url = J.buildUri("/security/{domainName}/securityservice/audit/service", domainName)
+							- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "button bt_add", "name" -> "create", "disabled" -> !hasLock, "action" -> url))
+				- )
+					- (index, row) =>
+						- val url = J.buildUri("/security/{domainName}/securityservice/audit/service/{classname}", domainName, row.getClassname)
+						- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "button bt_del", "disabled" -> !hasLock, "action" -> url))

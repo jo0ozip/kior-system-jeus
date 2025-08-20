@@ -1,0 +1,49 @@
+-@ val name: String
+-@ val src: List[String] = Nil
+-@ val dest: List[String] = Nil
+-@ val disabled: Boolean = !J.hasLock
+
+.orderedSelect(data-name="#{name}")
+	%ul.unselected
+		- (src diff dest).foreach
+			- (item) =>
+				%li= item
+	.buttons
+		- if(disabled)
+			%button(name="addall" disabled="disabled")
+				&#65&#9654;
+			%button(name="add" disabled="disabled")
+				&#9654;
+			%button(name="remove" disabled="disabled")
+				&#9664;	
+			%button(name="removeall" disabled="disabled")
+				&#9664&#65;	
+		- else
+			%button(name="addall")
+				&#65&#9654;
+			%button(name="add")
+				&#9654;
+			%button(name="remove")
+				&#9664;
+			%button(name="removeall")
+				&#9664&#65;
+	%ul.selected
+		- dest.foreach
+			- (item) =>
+				%li
+					= item
+					%input(type="hidden" name="#{name}" value="#{item}")
+	.buttons
+		- if(disabled)
+			%button(name="up" disabled="disabled")
+				&#9650;
+			%button(name="down" disabled="disabled")
+				&#9660;
+		- else
+			%button(name="up")
+				&#9650;
+			%button(name="down")
+				&#9660;
+	%input(type="hidden" name="_#{name}" value="on") 
+- J.init
+	require(["jeus/orderedSelect"]);	

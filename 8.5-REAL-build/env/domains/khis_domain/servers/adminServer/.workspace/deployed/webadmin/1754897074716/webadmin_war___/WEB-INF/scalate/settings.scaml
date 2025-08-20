@@ -1,0 +1,36 @@
+-@ val supportedLocales: List[(String, _)]
+
+- import jeus.tool.webadmin.Environment
+- val jEnv = S.eval[Environment]("@j_env")
+- layout("layouts/main.scaml", Map("title" -> "message:settings.title", "description" -> "message:settings.description", "help" -> "settings"))
+	%form(method="post" action="#{requestUri}")
+		- J.render("buttons", Map("useLock" -> false, "requiredRoles" -> Nil))
+
+		- J.layout("basic")
+			.table
+				- J.field(path = "autoLock", description = "message:settings.autoLock.description", label = "message:settings.autoLock.label")
+					- S.checkbox()
+				- J.field(path = "concealPassword", description = "message:settings.conceal.password.description", label = "message:settings.conceal.password.label")
+					- S.checkbox()
+				- J.field(path = "enableDescription", description = "message:settings.enable.description.description", label = "message:settings.enable.description.label")
+					- S.checkbox()
+				- J.field(path = "enableSchemaValidate", description = "message:settings.enable.schema.validate.description", label = "message:settings.enable.schema.validate.label")
+					- S.checkbox()
+				- J.field(path = "referenceDelete", description = "message:settings.reference.delete.description", label = "message:settings.reference.delete.label")
+					- S.checkbox()
+				- J.field(path = "enableConfigurationChangeDetail", description = "message:settings.enable.configuration.change.detail.description", label = "message:settings.enable.configuration.change.detail.label")
+					- S.checkbox()
+				- J.field(path = "enableTableSort", description = "message:settings.enable.tablesort.description", label = "message:settings.enable.tablesort.label")
+					- S.checkbox()
+				- if(!jEnv.isCloud)
+					- J.field(path = "serverGroupType", description = "message:settings.server.group.type.description", label = "message:settings.server.group.type.label")
+						- S.select(options = null :: List(S.message("common.node.label"), S.message("common.group.label"), S.message("common.cluster_s.label")))
+				- J.field(path = "serverGroups", description = "message:settings.server.groups.description", label = "message:settings.server.groups.label")
+					- S.textarea()
+				- J.field(path = "enablePageSearchCache", description = "message:settings.enable.pageSearch.cache.description", label = "message:settings.enable.pageSearch.cache.label")
+					- S.checkbox()
+				- J.field(path = "locale", description = "message:settings.locale.description", label = "message:settings.locale.label")
+					- S.select(options = null :: supportedLocales)
+
+		.lineBar
+		- J.render("buttons", Map("useLock" -> false, "requiredRoles" -> Nil))

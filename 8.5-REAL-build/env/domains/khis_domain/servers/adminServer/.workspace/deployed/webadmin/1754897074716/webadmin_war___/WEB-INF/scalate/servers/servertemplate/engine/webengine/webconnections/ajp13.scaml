@@ -1,0 +1,36 @@
+-@ val createMode: Boolean = false
+-@ val model: Ajp13ListenerType
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:server.web-engine.web-connections.ajp13-listener.title"))
+	- J.base = "domain.server-templates.server-template.web-engine.web-connections.ajp13-listener"
+	- render("/WEB-INF/scalate/menu/server-template.scaml", Map("first" -> 2, "second" -> 0, "third" -> 3))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".name")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getName
+				- J.field(schema = ".output-buffer-size")
+					- J.input()
+					%span.unit byte
+			- render("threadpool.scaml")
+
+		- J.layout("advanced")
+			.table
+			- layout("common.scaml")
+				- J.field(schema = ".server-access-control")
+					- J.checkbox()
+				- J.field(schema = ".allowed-server")
+					- J.textarea()
+
+		.lineBar
+		- J.render("buttons")
+

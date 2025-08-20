@@ -1,0 +1,127 @@
+-@ val first: Int = 0
+-@ val second: Int = 0
+-@ val third: Int = 0
+-@ val fourth: Int = -1
+
+-@ val disabled: Boolean = false
+
+-@ val serverTemplateName: String = ""
+
+-@ val virtualHostName: String = null
+
+- val url = Utils.buildUri("/servertemplate/{serverTemplateName}", serverTemplateName)
+%ul.tab01
+	-
+		J.render("tab", Map(
+			"items" -> List(
+				TabItem(url, "message:menu.basic"),
+				TabItem(url + "/resource/jms", "message:menu.servers.resource"),
+				TabItem(url + "/engine/webengine", "message:menu.servers.engine")
+			),
+			"selected" -> first
+		))
+- first match 
+	- case 0 =>
+		%ul.tab02
+			-
+				J.render("tab", Map(
+					"items" -> List(
+						TabItem(url, "message:menu.basicinfo"),
+						TabItem(url + "/resref", "message:menu.servers.basic.resref"),
+						TabItem(url + "/namingserver", "message:menu.servers.basic.namingserver"),
+						TabItem(url + "/systemthreadpool", "message:menu.servers.basic.systemthreadpool"),
+						TabItem(url + "/systemlogging", "message:menu.servers.basic.systemlogging"),
+						TabItem(url + "/userlogging", "message:menu.servers.basic.userlogging"),
+						TabItem(url + "/tmconfig", "message:menu.servers.basic.tmconfig")
+					),
+					"selected" -> second
+				))		
+	- case 1 =>
+		%ul.tab02
+			-
+				J.render("tab", Map(
+					"items" -> List(
+						TabItem(url + "/resource/jms", "message:menu.servers.resource.jms"),
+						TabItem(url + "/resource/jmxmanager", "message:menu.servers.resource.jmxmanager"),
+						TabItem(url + "/resource/scheduler", "message:menu.servers.resource.scheduler"),
+						TabItem(url + "/resource/lifecycle", "message:menu.servers.resource.lifecycle"),
+						TabItem(url + "/resource/external", "message:menu.servers.resource.external")
+					),
+					"selected" -> second
+				))
+	- case 2 =>
+		%ul.tab02
+			-
+				J.render("tab", Map(
+					"items" -> List(
+						TabItem(url + "/engine/webengine", "message:menu.servers.webengine"),
+						TabItem(url + "/engine/jmsengine", "message:menu.servers.jmsengine"),
+						TabItem(url + "/engine/ejbengine", "message:menu.servers.ejbengine")
+					),
+					"selected" -> second
+				))
+		- second match
+			- case 0 =>
+				%ul.tab03
+					-
+						J.render("tab", Map(
+							"items" -> List(
+								TabItem(url + "/engine/webengine", "message:menu.basic"),
+								TabItem(url + "/engine/webengine/jspengine", "message:menu.servers.webengine.jspengine"),
+								TabItem(url + "/engine/webengine/virtualhost", "message:menu.servers.webengine.virtualhost"),
+								TabItem(url + "/engine/webengine/webconnections", "message:menu.servers.webengine.webconnections"),
+								TabItem(url + "/engine/webengine/accesslog", "message:menu.servers.webengine.accesslog"),
+								TabItem(url + "/engine/webengine/sessionconfig", "message:menu.servers.webengine.sessionconfig"),
+								TabItem(url + "/engine/webengine/pipeline", "message:menu.servers.webengine.pipeline")
+							),
+							"selected" -> third
+						))
+				- third match
+					- case 2 if fourth >= 0 =>
+						%ul.tab04
+							- 
+								if(virtualHostName == null) {
+									J.render("tab", Map(
+										"items" -> List(
+											TabItem(url + "/engine/webengine/virtualhost", "message:menu.basic"),
+											TabItem(null, "message:menu.servers.webengine.accesslog", true),
+											TabItem(null, "message:menu.servers.webengine.pipeline", true)
+										),
+										"selected" -> fourth
+									))		
+								} else {
+									val vHostURL = Utils.buildUri(url + "/engine/webengine/virtualhost/{virtualHostName}", virtualHostName)
+									J.render("tab", Map(
+										"items" -> List(
+											TabItem(vHostURL, "message:menu.basic"),
+											TabItem(vHostURL + "/accesslog", "message:menu.servers.webengine.accesslog"),
+											TabItem(vHostURL + "/pipeline", "message:menu.servers.webengine.pipeline")
+										),
+										"selected" -> fourth
+									))
+								}
+					- case _ =>
+			- case 1 =>
+				%ul.tab03
+					-
+						J.render("tab", Map(
+							"items" -> List(
+								TabItem(url + "/engine/jmsengine", "message:menu.basic"),
+								TabItem(url + "/engine/jmsengine/serviceconfig", "message:menu.servers.jmsengine.serviceconfig"),
+								TabItem(url + "/engine/jmsengine/connectionfactory", "message:menu.servers.jmsengine.connectionfactory"),
+								TabItem(url + "/engine/jmsengine/persistencestore", "message:menu.servers.jmsengine.persistencestore"),
+								TabItem(url + "/engine/jmsengine/messagesort", "message:menu.servers.jmsengine.messagesort")
+							),
+							"selected" -> third
+						))
+			- case 2 =>
+				%ul.tab03
+					-
+						J.render("tab", Map(
+							"items" -> List(
+								TabItem(url + "/engine/ejbengine", "message:menu.basic"),
+								TabItem(url + "/engine/ejbengine/activemanagement", "message:menu.servers.ejbengine.activemanagement"),
+								TabItem(url + "/engine/ejbengine/timerservice", "message:menu.servers.ejbengine.timerservice")
+							),
+							"selected" -> third
+						))						

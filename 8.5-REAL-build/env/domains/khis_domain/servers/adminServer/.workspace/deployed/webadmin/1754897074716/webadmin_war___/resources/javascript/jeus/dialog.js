@@ -1,0 +1,1 @@
+define(["jquery","jquery-ui/dialog","bundle"],function(e,t,n){return function(t,r){return r==null&&(r=550),e(t).dialog({dialogClass:"dialog",autoOpen:!1,modal:!0,width:r,resizable:!1,buttons:[{text:n.ok,click:function(){var t;return e("#curtain").show(),t=e(this),t.find("form").submit()}},{text:n.cancel,click:function(){var t;return t=e(this),t.dialog("close")}}]})}});

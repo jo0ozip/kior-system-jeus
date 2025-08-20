@@ -1,0 +1,55 @@
+-@ val createMode: Boolean = false
+-@ val __dataSources: List[String] = Nil
+-@ val model: ClusterDsType
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:resources.clusterds.title"))
+	- J.base = "domain.resources.data-source.cluster-ds"
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".data-source-id")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getDataSourceId
+				- J.field(schema = ".export-name")
+					- J.input()
+				- J.field(schema = ".data-source-selector")
+					- J.input()
+				- J.field(schema = ".load-balance")
+					- J.checkbox()
+				- J.field(schema = ".component-data-sources", path = "componentDataSources.dataSource")
+					- if (__dataSources == Nil)
+						= S.message("common.noExist.entry")
+					- else
+						- val cds = model.getComponentDataSources()
+						- val dest: List[String] = if(cds == null) Nil else cds.getDataSource().asScala.toList
+						- J.render("orderedSelect", Map("name" -> "componentDataSources.dataSource", "src" -> __dataSources, "dest" -> dest))
+						//- J.checkboxes(options = __dataSources)
+
+		- J.layout("advanced")
+			.table
+				- J.field(schema = ".is-pre-conn")
+					- J.checkbox()
+				- J.field(schema = ".use-failback")
+					- J.checkbox()
+				- J.field(schema = ".data-source-affinity")
+					- J.checkbox()
+			- J.group(schema = ".ons-support", noBinding = false, attributes = Map("tail" -> "checkboxForGroup"))
+				.table
+					- J.field(schema = ".ons-config")
+						- J.input()
+
+		.lineBar
+		- J.render("buttons")
+		- J.init
+			:plain
+				require(["jeus/checkall"], function(checkall){
+					checkall(".tableType", "input[name=componentDataSources.dataSource]");
+				});

@@ -1,0 +1,37 @@
+-@ val createMode: Boolean = false
+-@ val model: DurableSubscriptionType
+-@ val __messageSorts: List[String]
+-@ val destinations: List[String] = Nil
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:servers.durable-subscription.title"))
+	- J.base = "domain.server-templates.server-template.jms-resource.durable-subscription"
+	- render("/WEB-INF/scalate/menu/server-template.scaml", Map("first" -> 1, "second" -> 0))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+		
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".name")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getName()
+						- J.hidden()
+				- J.field(schema = ".client-id")
+					- J.input()
+				- J.field(schema = ".shared")
+					- J.checkbox()	
+				- J.field(schema = ".destination-name")
+					- J.select(options = destinations)
+				- J.field(schema = ".message-selector")
+					- J.input()
+				- J.field(schema = ".message-sort")
+					- J.select(options = null :: __messageSorts)
+
+
+		.lineBar
+		- J.render("buttons")

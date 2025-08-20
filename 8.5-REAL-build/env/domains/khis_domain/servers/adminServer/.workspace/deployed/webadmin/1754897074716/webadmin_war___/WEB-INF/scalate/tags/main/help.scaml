@@ -1,0 +1,36 @@
+- import jeus.tool.webadmin.Environment
+- val jEnv = S.eval[Environment]("@j_env")
+
+%aside#mainHelp
+	%h1 = S.message("manual.admin")
+
+	%ul
+		%li
+			%a.popupHelp(href="#{contextPath}/help?helpUrl=domain") = S.message("manual.domain")
+		%li
+			%a.popupHelp(href="#{contextPath}/help?helpUrl=servers") = S.message("manual.servers")
+		%li.more 
+			%span = S.message("manual.more")
+
+			%div
+				%ul
+					%li
+						%a.popupHelp(href="#{contextPath}/help?helpUrl=domain") = S.message("manual.domain")
+					- if(!jEnv.isCloud)	
+						%li
+							%a.popupHelp(href="#{contextPath}/help?helpUrl=clusters") = S.message("manual.clusters")
+					%li
+						%a.popupHelp(href="#{contextPath}/help?helpUrl=servers") = S.message("manual.servers")
+					%li
+						%a.popupHelp(href="#{contextPath}/help?helpUrl=applications") = S.message("manual.applications")
+					%li
+						%a.popupHelp(href="#{contextPath}/help?helpUrl=security") = S.message("manual.security")
+					%li
+						%a.popupHelp(href="#{contextPath}/help?helpUrl=resource") = S.message("manual.resource")
+					%li
+						%a.popupHelp(href="#{contextPath}/help?helpUrl=monitoring") = S.message("manual.monitoring")
+
+				%span.close_btn
+					close
+
+

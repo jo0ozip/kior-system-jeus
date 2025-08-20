@@ -1,0 +1,68 @@
+- import jeus.tool.webadmin.Environment
+- import jeus.tool.webadmin.Current
+
+-@ var body: String 
+
+- val jEnv = S.eval[Environment]("@j_env")
+
+- layout("/WEB-INF/scalate/layouts/base.scaml")
+	- J.header
+		%link(rel="text/css" rel="stylesheet" href="#{contextPath}/resources/less/style.css")
+
+	.color-line
+		.line1
+		.line2
+
+	%header#topArea
+		%h1
+			- if({contextPath} == null || {contextPath} == "")
+				%a(href="/") = S.message("common.product.title")
+			- else
+				%a(href="#{contextPath}") = S.message("common.product.title")
+		%ul#top_mu
+			%li
+				%a(href="#{contextPath}/logout") = S.message("common.logout")
+			%li
+				%a(href="#{contextPath}/sitemap") = S.message("common.sitemap")
+			%li
+				%a(href="#{contextPath}/settings") = S.message("common.settings")
+			%li
+				- if({contextPath} == null || {contextPath} == "")
+					%a(href="/") = S.message("common.home")
+				- else
+					%a(href="#{contextPath}") = S.message("common.home")
+		%ul#top_info1
+			%li = SS.authentication("principal.username")
+			%li = jEnv.version
+			%li.last-child
+				#{jEnv.serverName}(#{jEnv.listenAddress}:#{jEnv.listenPort})
+			
+		%ul#top_info2
+			%li
+				#{jEnv.license}#{jEnv.licenseDue}
+			%li.last-child
+				#{S.message("common.connectionTime")} : #{S.eval[String]("@current.connectionTime")}
+
+	#mainLayout
+		%div#leftArea
+			= J.render("main/menu")
+			= J.render("main/monitor")
+
+			- if (SS.anyGranted(List("ROLE_CONFIG", "ROLE_SECURITY")))
+				= J.render("main/lockAndEdit")
+			= J.render("main/help")
+
+		
+		%div#contentArea(role="main")
+			!= body
+
+	#bottomArea
+		%footer
+			%ul
+				%li = S.message("common.customer.support")
+				%li.last-child
+					%a{:title => {S.message("common.technet")}, :href => {S.message("common.technet.url")}, :target => "_blank"} 
+						= {S.message("common.technet.title")}
+
+			%span.copyright = S.message("common.copyright")
+

@@ -1,0 +1,21 @@
+FROM rockylinux93:base
+
+COPY --chown=jeus:jeus /env/.bash_profile /home/jeus
+COPY --chown=jeus:jeus /env/.bashrc /home/jeus
+COPY --chown=jeus:jeus /jeus /sw/jeus
+COPY --chown=jeus:jeus /env/license /sw/jeus/license
+COPY --chown=jeus:jeus /env/bin /sw/jeus/bin
+COPY --chown=jeus:jeus /env/lib /sw/jeus/lib
+
+
+RUN find /sw/jeus -type d -exec chmod 700 {} \; \
+ && find /sw/jeus -type f -exec chmod 600 {} \; \
+ && chmod u+x /sw/jeus/bin/*
+
+COPY /env/java17 /sw/java
+
+USER jeus
+WORKDIR /home/jeus
+
+#ENTRYPOINT ["/sw/jeus/bin/jboot.sh"]
+#ENTRYPOINT ["/sw/jeus/bin/nmboot.sh"]

@@ -1,0 +1,63 @@
+-@ val __InCluster: String = null
+-@ val destinations: List[DestinationType]
+-@ val durableSubscriptions: List[DurableSubscriptionType]
+-@ val serverName: String
+
+
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("alert" -> __InCluster, "title" -> "message:servers.jms-resource.title"))
+	- J.base = "domain.servers.server.jms-resource"
+
+	- val isReadonly = if(isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 1, "second" -> 1))
+	%h2.title
+		= J.title("message:servers.destination.title", J.base)
+	= Table.render(null, destinations)
+		- case 1 =>
+			- Item("message:header.name", "250px")
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{server}/resource/jms/destination/{name}", serverName, row.getName())
+					%a(href="#{url}") = row.getName()
+		- case 2 =>
+			- Item("message:header.type")
+				- (index, row) =>
+					= row.getType
+		- case 3 =>
+			- Item("90px", List("center"),
+				- Head
+					- () =>
+						- val url = J.buildUri("/servers/{server}/resource/jms/destination", serverName)
+						- J.render("formButton", Map("label" -> "message:common.add.button", "action" -> url, "name" -> "create", "cssClass" -> "bt_add", "disabled" -> {!hasLock || isReadonly}))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{server}/resource/jms/destination/{name}", serverName, row.getName())
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "action" -> url, "method" -> "delete", "cssClass" -> "bt_del", "disabled" -> {!hasLock || isReadonly}))
+	%h2.title
+		= J.title("message:servers.durable-subscription.title", J.base)
+	= Table.render(null, durableSubscriptions)
+		- case 1 =>
+			- Item("message:header.name", "250px")
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{server}/resource/jms/durable/{durableName}", serverName, row.getName())
+					%a(href="#{url}") = row.getName()
+		- case 2 =>
+			- Item("message:header.name", "200px")
+				- (index, row) =>
+					= row.getClientId
+		- case 3 =>
+			- Item("message:header.destination-name")
+				- (index, row) =>
+					= row.getDestinationName
+		- case 4 =>
+			- Item("90px", List("center"),
+				- Head
+					- () =>
+						- val url = J.buildUri("/servers/{server}/resource/jms/durable", serverName)
+						- J.render("formButton", Map("label" -> "message:common.add.button", "action" -> url, "name" -> "create", "cssClass" -> "bt_add", "disabled" -> {!hasLock || isReadonly}))
+			- )
+				- (index, row) =>				
+					- val url = J.buildUri("/servers/{server}/resource/jms/durable/{durableName}", serverName, row.getName())
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "action" -> url, "method" -> "delete", "cssClass" -> "bt_del", "disabled" -> {!hasLock || isReadonly}))

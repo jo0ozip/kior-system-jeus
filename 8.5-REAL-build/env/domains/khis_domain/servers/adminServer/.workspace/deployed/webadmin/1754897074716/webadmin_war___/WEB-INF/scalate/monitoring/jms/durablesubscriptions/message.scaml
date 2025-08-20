@@ -1,0 +1,75 @@
+- import jeus.tool.webadmin.controller.monitoring.jms.Message
+
+-@ val targets: List[String]
+-@ val targetName: String
+-@ val target: String = null
+-@ val model: Message = null
+-@ val messageId: String
+-@ val durablesubscriptionName: String
+-@ val clientId: String
+-@ val destinations: List[String] = Nil
+
+-@ val bodyAlert: String = null
+
+- layout("/scalate/layouts/main.scaml", Map("description" -> "message:monitoring.jms.durablesubscriptions.description", "title" -> "message:monitoring.jms.durablesubscriptions"))
+	- J.base = "monitoring.jms.durablesubscriptions"
+	- render("/scalate/menu/monitoring/jms.scaml", Map("first" -> 1, "second" -> {if(targetName == "server") 0 else 1}))
+
+	- J.layout("accordian", Map("items" -> targets, "selected" -> target, "baseUri" -> {"/monitoring/jms/durable/" + targetName}), true)
+		- if (model != null)
+			%h2.title 
+				= S.message("monitoring.jms.message.indurablesubscription.title")
+				- val browserUrl = J.buildUri("/monitoring/jms/durable/{targetName}/{target}/{durablesubscriptionName}/{clientId}/messages/1/20", targetName, target, durablesubscriptionName, clientId)
+				%a(href="#{browserUrl}") = clientId + "_" + durablesubscriptionName		
+			
+			- val url = J.buildUri("/monitoring/jms/durable/{targetName}/{target}/{durablesubscriptionName}/{clientId}/messages/{messageId}", targetName, target, durablesubscriptionName, clientId, messageId)
+
+			%form(method="post" action='#{url}')
+				- val disabled = true
+
+				- if(!disabled)
+					- J.render("buttons", Map("useLock" -> false))
+				
+				- J.layout("basic")
+					.table
+						- J.field(label = "message:monitoring.jms.message.messageID.label", path = "messageId")
+							= model.messageId
+							- S.hidden()
+						- J.field(label = "message:monitoring.jms.message.messageType.label", path = "messageType")
+							= model.messageType
+							- S.hidden()
+						- J.field(label = "message:monitoring.jms.message.destination.label", path = "destination")
+							= model.destination
+							- S.hidden()
+						- J.field(label = "message:monitoring.jms.message.createdTime.label", path = "createdTime")
+							= model.createdTime
+							- S.hidden()
+						- J.field(label = "message:monitoring.jms.message.priority.label", path = "priority")
+							- S.select(options = (0 to 9).map(_.toString).toList, attributes = Map("disabled" -> disabled))
+						- J.field(label = "message:monitoring.jms.message.deliveryTime.label", path = "deliveryTime")
+							= model.deliveryTime
+							- S.hidden()
+						- J.field(label = "message:monitoring.jms.message.deliveryMode.label", path = "deliveryMode")
+							- S.select(options = List("NON PERSISTENT" -> "1", "PERSISTENT" -> "2"), attributes = Map("disabled" -> disabled))
+						- J.field(label = "message:monitoring.jms.message.correlationID.label", path = "correlationId")
+							- S.input(attributes = Map("disabled" -> disabled))
+						- J.field(label = "message:monitoring.jms.message.expirationTime.label", path = "expirationTime")
+							= model.expirationTime
+							- S.hidden()
+						- J.field(label = "message:monitoring.jms.message.timeToLive.label", path = "timeToLive")
+							- S.input(attributes = Map("disabled" -> disabled))
+						- J.field(label = "message:monitoring.jms.message.redelivered.label", path = "redelivered")
+							= model.redelivered
+							- S.hidden()
+						- J.field(label = "message:monitoring.jms.message.redeliveryLimit.label", path = "redeliveryLimit")
+							- S.input(attributes = Map("disabled" -> disabled))
+						- J.field(label = "message:monitoring.jms.message.replyTo.label", path = "replyTo")
+							- S.select(options = {null :: destinations}, attributes = Map("disabled" -> disabled))
+						- J.field(label = "message:monitoring.jms.message.messageBody.label", path = "messageBody", alert = bodyAlert)
+							- S.textarea(attributes = Map("disabled" -> disabled))
+						- J.field(label = "message:monitoring.jms.message.properties.label", path = "properties")
+							- S.textarea(attributes = Map("disabled" -> disabled))
+
+				.lineBar
+				- if(!disabled)
+					- J.render("buttons", Map("useLock" -> false))

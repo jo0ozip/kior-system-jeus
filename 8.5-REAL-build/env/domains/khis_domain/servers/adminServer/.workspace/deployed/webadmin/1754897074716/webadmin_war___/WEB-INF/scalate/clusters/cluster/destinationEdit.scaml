@@ -1,0 +1,55 @@
+-@ val createMode: Boolean = false
+-@ val model: DestinationType
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:clusters.destination.title"))
+	- J.base = "domain.clusters.cluster.jms-resource.destination"
+	- render("/WEB-INF/scalate/menu/cluster.scaml", Map("selected" -> 3))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".name")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getName
+				- J.field(schema = ".type")
+					- J.select()
+				- J.field(schema = ".export-name")
+					- J.input()
+				- J.field(schema = ".subscription-limit")
+					- J.input()
+				- J.field(schema = ".quota")
+					- J.input()
+				- J.field(schema = ".max-pending-limit")
+					- J.input()
+				- J.field(schema = ".resume-dispatch-factor")
+					- J.input()
+			- J.group(schema = ".message-group")
+				.table
+					- J.field(schema = ".message-handling")
+						- J.select()
+					- J.field(schema = ".expiration-time")
+						- J.input()
+						%span.unit = S.message("common.s")
+			- J.group(schema = ".topic-multicast", noBinding = false, attributes = Map("tail" -> "checkboxForGroup"))
+				.table
+					- J.field(schema = ".multicast-address")
+						- J.input()
+					- J.field(schema = ".multicast-port")
+						- J.input()
+					- J.field(schema = ".multicast-buffer-size")
+						- J.input()
+					- J.field(schema = ".multicast-thread-pool-min-size")
+						- J.input()
+					- J.field(schema = ".multicast-thread-pool-max-size")
+						- J.input()
+
+
+		.lineBar
+		- J.render("buttons")

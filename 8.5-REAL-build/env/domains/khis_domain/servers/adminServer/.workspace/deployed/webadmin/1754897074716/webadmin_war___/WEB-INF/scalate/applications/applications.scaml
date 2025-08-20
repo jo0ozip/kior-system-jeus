@@ -1,0 +1,137 @@
+- import jeus.tool.webadmin.Environment
+- val jEnv = S.eval[Environment]("@j_env")
+
+-@ val model: TabularData = null
+
+-@ val allServers: List[String] = Nil
+-@ val allClusters: List[String] = Nil
+-@ val targets: Map[String, (List[String], List[String], List[String])] = null
+-@ val allDependentLibraries: List[String] = Nil
+-@ val plans: List[String] = Nil
+
+- implicit val dialogOption = DialogOption(alwaysRender = false)
+
+- layout("/scalate/layouts/main.scaml", Map("description" -> "message:applications.description", "title" -> "message:applications.application.title"))
+	- J.base = "domain.deployed-applications"
+	- render("/WEB-INF/scalate/menu/application.scaml", Map("selected" -> 0))
+	- if(model != null)
+		= Tabular.sortable(null, model, false)
+			- case (-1, displayNames) =>
+				- Item(null, "30px")
+					- (index, row) =>
+						%input(type="checkbox" name="selectedID" value="#{row(0)}" class = "#{row(2)}")
+			- case (0, displayNames) =>
+				- Item(displayNames(0))
+					- (index, row) =>
+						- val DEPLOYED: String = S.message("level.DEPLOYED")
+						- val INSTALLED: String = S.message("level.INSTALLED")
+						- row(2) match
+							- case INSTALLED =>
+								= row(0)
+							- case _ =>
+								- val url = J.buildUri("/applications/applications/{applicationID}", row(0))
+								%a(href="#{url}") = row(0)
+			- case (1, displayNames) =>
+				- Item(displayNames(1), "120px", "center")
+					- (index, row) =>
+						= row(1)
+			- case (2, displayNames) =>
+				- Item(displayNames(2), "100px", "center")
+					- (index, row) =>
+						= row(2)
+			- case (20, displayNames) =>
+				- Item("220px", List("center"),
+					- Head
+						- () =>
+							- J.dialog("formButton", Map("name" -> "install", "label" -> "message:common.install.button", "cssClass" -> "bt_add", "action" -> J.buildUri("/applications/applications", "install" -> "install")))
+								- J.render("/WEB-INF/scalate/applications/install.scaml", Map("action" -> {J.buildUri("/applications/applications", "install" -> "install")}))
+							- J.render("formButton", Map("label" -> "message:common.deploy.button", "disabled" -> hasLockAndNoAutoLock, "cssClass" -> "bt_add", "name" -> "deploy", "action" -> J.buildUri("/applications/applications")))
+							%a.button.bt_add(href="#{contextPath}/applications/deployment-plans")
+								%span.button-text = S.message("applications.common.plan.button")
+				- )
+					- (index, row) =>
+						- val applicationID = row(0).toString
+						- val url = J.buildUri("/applications/applications/{applicationID}", applicationID)
+						- val DISTRIBUTED: String = S.message("level.DISTRIBUTED")
+						- val RUNNING: String = S.message("level.RUNNING")
+						- val DEPLOYED: String = S.message("level.DEPLOYED")
+						- row(2) match
+							- case DISTRIBUTED | RUNNING =>
+								- val (servers, clusters, virtualHosts) = targets(applicationID)
+								- J.render("formButton", Map("label" -> "message:common.redeploy.button", "cssClass" -> "bt2", "action" -> {url + "/redeploy"}, "dialogTemplateUri" -> "applications/redeploy", "dialogParams" -> Map("id" -> applicationID, "action" -> {url + "/redeploy"}, "plans" -> plans, "allDependentLibraries" -> allDependentLibraries)))
+								- if(!jEnv.isCloud)
+									- J.render("formButton", Map("label" -> "message:applications.applications.add-target.button", "disabled" -> hasLockAndNoAutoLock, "cssClass" -> "bt2", "action" -> {url + "/addtarget"}, "dialogTemplateUri" -> "applications/addtarget", "dialogParams" -> Map("id" -> applicationID, "action" -> {url + "/addtarget"}, "servers" -> {allServers diff servers}, "clusters" -> {allClusters diff clusters}, "virtualHosts" -> virtualHosts)))
+									- J.render("formButton", Map("label" -> "message:applications.applications.remove-target.button", "disabled" -> hasLockAndNoAutoLock, "cssClass" -> "bt2", "action" -> {url + "/removetarget"}, "dialogTemplateUri" -> "applications/removetarget", "dialogParams" -> Map("id" -> applicationID, "action" -> {url + "/removetarget"}, "servers" -> servers, "clusters" -> clusters, "virtualHosts" -> virtualHosts)))
+							- case DEPLOYED =>
+								- val (servers, clusters, virtualHosts) = targets(applicationID)
+								- if(!jEnv.isCloud)	
+									- J.render("formButton", Map("label" -> "message:applications.applications.add-target.button", "disabled" -> hasLockAndNoAutoLock, "cssClass" -> "bt2", "action" -> {url + "/addtarget"}, "dialogTemplateUri" -> "applications/addtarget", "dialogParams" -> Map("id" -> applicationID, "action" -> {url + "/addtarget"}, "servers" -> {allServers diff servers}, "clusters" -> {allClusters diff clusters}, "virtualHosts" -> virtualHosts)))
+									- J.render("formButton", Map("label" -> "message:applications.applications.remove-target.button", "disabled" -> hasLockAndNoAutoLock, "cssClass" -> "bt2", "action" -> {url + "/removetarget"}, "dialogTemplateUri" -> "applications/removetarget", "dialogParams" -> Map("id" -> applicationID, "action" -> {url + "/removetarget"}, "servers" -> servers, "clusters" -> clusters, "virtualHosts" -> virtualHosts)))
+							- case _ =>
+
+		- J.init
+			:plain
+				require(["page/applications"], function(applications){ applications.init();
+				});
+
+		.buttonGroup
+			- val url = J.buildUri("/applications/applications")
+
+			- J.dialog("formButton", Map("label" -> "message:common.start.button", "cssClass" -> "bt2", "method" -> "post", "action" -> url, "name" -> "start", "appendTarget" -> "input[name=selectedID]"))
+				%h2.title
+					= S.message("common.start.title")
+				%p.description
+					= S.message("application.start.confirm.message")
+				%form(method="post" action="#{url}")
+					.hidden
+					%input(type="hidden" name="start" value="start")
+					- J.layout("basic")
+						.table
+							- J.field(label = "message:applications.common.concurrent.label", description = "message:application.start.concurrent.description")
+								%input(type="checkbox" name="concurrent")
+
+			- J.dialog("formButton", Map("label" -> "message:common.stop.button", "cssClass" -> "bt2", "method" -> "post", "action" -> url, "name" -> "stop", "appendTarget" -> "input[name=selectedID]"))
+				%h2.title
+					= S.message("common.stop.title")
+				%p.description
+					= S.message("application.stop.confirm.message")
+				%form(method="post" action="#{url}")
+					.hidden
+					%input(type="hidden" name="stop" value="stop")
+					- J.layout("basic")
+						.table
+							- J.field(label = "message:applications.common.concurrent.label", description = "message:application.stop.concurrent.description")
+								%input(type="checkbox" name="concurrent")
+
+			- val deploy = "button_" + J.newID
+			- J.dialogWithFunction("formButton", Map("label" -> "message:common.deploy.button", "cssClass" -> "bt2", "method" -> "post", "disabled" -> hasLockAndNoAutoLock, "action" -> url, "name" -> "deploy", "buttonId" -> deploy, "appendTarget" -> "input[name=selectedID]"))
+				- (dialogId: String) =>			
+					%h2.title
+						= S.message("common.deploy.title")
+					%p.description
+						= S.message("application.deploy.confirm.message")
+					%form(method="post" action="#{url}")
+						.hidden
+						%input(type="hidden" name="deploy" value="deploy")
+						- J.layout("basic")
+							.table
+								- J.field(label = "message:applications.common.concurrent.label", description = "message:application.deploy.concurrent.description")
+									%input(type="checkbox" name="concurrent")
+					- val dialogId_2 = dialogId + "_2"
+					- J.layout("dialog", Map("dialogId" -> dialogId_2))
+						- attributes("dialogBody") =
+							- (dialogId: String) =>
+								%article
+									%h2.title
+										= S.message("common.deploy.title")
+									- J.render("/WEB-INF/scalate/applications/deployInternal.scaml", Map("action" -> url, "useInDialog" -> true))
+					- J.init
+						:&plain
+							require(["page/applications"], function(applications){
+								applications.switchConfirmOrDialog("##{deploy}", "#{dialogId}", "#{dialogId_2}");
+							});
+
+			- J.dialog("formButton", Map("label" -> "message:common.undeploy.button", "disabled" -> hasLockAndNoAutoLock, "cssClass" -> "bt2", "action" -> url, "name" -> "undeploy", "appendTarget" -> "input[name=selectedID]"))
+				- J.render("/WEB-INF/scalate/applications/undeploy.scaml", Map("action" -> url))
+
+			- J.render("formButton", Map("label" -> "message:common.uninstall.button", "cssClass" -> "bt_del", "method" -> "post", "disabled" -> hasLockAndNoAutoLock, "action" -> url, "name" -> "uninstall", "confirm" -> true, "message" -> "message:application.uninstall.confirm.message", "appendTarget" -> "input[name=selectedID]"))

@@ -1,0 +1,10 @@
+-@ val dialogId: String
+
+- J.footer
+	%div.dialog{:id => dialogId}
+		- attributeOrElse[Any]("dialogBody", null) match
+			- case func: Function1[String, Unit] @unchecked =>
+				- func(dialogId)
+				- attributes("dialogBody") = null
+			- case _ =>
+				- J.renderBody

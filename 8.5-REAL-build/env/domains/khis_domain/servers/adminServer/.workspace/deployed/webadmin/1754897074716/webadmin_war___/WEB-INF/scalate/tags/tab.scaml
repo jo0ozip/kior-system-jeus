@@ -1,0 +1,20 @@
+-@ var items: List[TabItem]
+-@ var selected: Int = 0
+-@ val disabled: Boolean = false
+
+- items.zipWithIndex.foreach
+	- case (item, index) =>
+		- 
+			val cssClass = 
+				if (index == selected)
+					"selected " + item.cssClass
+				else
+					item.cssClass
+		- if (item.disabled || disabled || hasText(attributeOrElse("__runtime", null)))  
+			%li{:class => {cssClass + " disabled"}}
+				= J.message(item.label)	
+		- else
+			%li{:class => {cssClass}}
+				- val url = item.url
+				%a(href='#{contextPath}/#{if (url.startsWith("/")) url.substring(1) else url}')
+					= J.message(item.label)	

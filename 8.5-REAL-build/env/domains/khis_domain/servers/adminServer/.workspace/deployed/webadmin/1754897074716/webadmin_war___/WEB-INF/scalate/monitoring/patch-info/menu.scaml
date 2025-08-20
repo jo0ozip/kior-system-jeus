@@ -1,0 +1,13 @@
+
+-@ val first: Int = 0
+
+.menus
+	%ul.tab01
+		-
+			J.render("tab", Map(
+				"items" -> List(
+					TabItem("/monitoring/patch-info/node", "message:common.node.taplabel"),
+					TabItem("/monitoring/patch-info/server", "message:common.server.label")
+				),
+				"selected" -> first
+			))

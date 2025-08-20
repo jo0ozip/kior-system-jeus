@@ -1,0 +1,39 @@
+- import jeus.tool.webadmin.help.Menu
+
+-@ val helpMenus: List[Menu] = Nil
+-@ val helpUrl: String = ""
+
+- layout("/WEB-INF/scalate/layouts/base.scaml")
+	- J.header
+		%link(rel="text/css" rel="stylesheet" href="#{contextPath}/resources/less/help.css")
+
+	- def renderMenu(menus: List[Menu])
+		- if (menus != Nil)
+			%ul
+				- for(menu <- menus)
+					%li
+						%a(href="#{contextPath}/online_help/#{menu.href}" target="helpMain") = menu.label
+						- renderMenu(menu.children)
+
+
+	%header.header
+		%h1 
+			%a(href="#{contextPath}/help/main" target="helpMain") = S.message("manual.online.title")
+	.main-container
+		%nav
+			%h2 Menu
+			%ul.first
+				- for(menu <- helpMenus)
+					%li
+						%a(href="#none") = menu.label
+						- renderMenu(menu.children)
+		
+		%iframe.helpMain(src="#{contextPath}/#{helpUrl}" name="helpMain")
+
+
+	- J.init
+		require(["page/help"]);
+
+
+
+

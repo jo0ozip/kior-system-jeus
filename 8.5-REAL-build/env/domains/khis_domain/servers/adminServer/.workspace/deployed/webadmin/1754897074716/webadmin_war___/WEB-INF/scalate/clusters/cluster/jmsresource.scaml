@@ -1,0 +1,59 @@
+-@ val destinations: List[DestinationType]
+-@ val durableSubscriptions: List[DurableSubscriptionType]
+-@ val clusterName: String
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:clusters.jmsresource.title"))
+	- J.base = "domain.clusters.cluster.jms-resource"
+	- render("/WEB-INF/scalate/menu/cluster.scaml", Map("selected" -> 3))
+
+	%h2.title
+		= J.title("message:clusters.destination.title", J.base)
+
+	= Table.render(null, destinations)
+		- case 1 =>
+			- Item("message:header.name", "250px")
+				- (index, row) =>
+					- val url = J.buildUri("/clusters/{clusterName}/jmsresource/destination/{name}", clusterName, row.getName)
+					%a(href="#{url}") = row.getName
+		- case 2 =>
+			- Item("message:header.type")
+				- (index, row) =>
+					= row.getType
+		- case 3 =>
+			- Item("90px",
+				- Head 
+					- () =>
+						- val url = J.buildUri("/clusters/{clusterName}/jmsresource/destination", clusterName)
+						- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "button bt_add", "name" -> "create", "disabled" -> !hasLock, "action" -> url))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/clusters/{clusterName}/jmsresource/destination/{name}", clusterName, row.getName)
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "button bt_del", "disabled" -> !hasLock, "action" -> url))
+
+	%h2.title
+		= J.title("message:clusters.durablesubscription.title", J.base)
+
+	= Table.render(null, durableSubscriptions)
+		- case 1 =>
+			- Item("message:header.name", "250px")
+				- (index, row) =>
+					- val url = J.buildUri("/clusters/{clusterName}/jmsresource/durable/{name}", clusterName, row.getName)
+					%a(href="#{url}") = row.getName
+		- case 2 =>
+			- Item("message:header.client-id", "200px")
+				- (index, row) =>
+					= row.getClientId
+		- case 3 =>
+			- Item("message:header.destination-name")
+				- (index, row) =>
+					= row.getDestinationName
+		- case 4 =>
+			- Item("90px",
+				- Head
+					- () =>
+						- val url = J.buildUri("/clusters/{clusterName}/jmsresource/durable", clusterName)
+						- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "button bt_add", "name" -> "create", "disabled" -> !hasLock, "action" -> url))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/clusters/{clusterName}/jmsresource/durable/{name}", clusterName, row.getName)
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "button bt_del", "disabled" -> !hasLock, "action" -> url))

@@ -1,0 +1,103 @@
+- import jeus.tool.webadmin.Environment
+- val jEnv = S.eval[Environment]("@j_env")
+
+-@ val appId: String
+-@ val model: DeployedApplicationType
+-@ val applicationTime: String
+-@ val serverStatus: List[(String, String)]
+
+- layout("/scalate/layouts/main.scaml", Map("title" -> "message:applications.application.title"))
+	- J.base = "domain.deployed-applications.deployed-application"
+	%h2.title
+		= J.title("message:applications.application.title", J.base)
+	- render("/WEB-INF/scalate/menu/application.scaml", Map("selected" -> 0))
+	%ul.tab02
+		-
+			val url = Utils.buildUri("/applications/applications/{applicationID}", appId)
+			J.render("tab", Map(
+				"items" -> List(
+					TabItem(url, "message:common.information.taplabel")
+				),
+				"selected" -> 0
+			))
+	%h2.title
+		= J.title("message:applications.application.title", J.base)
+
+	- J.layout("basic")
+		.table
+			- J.field(label = "message:common.id.label")
+				= model.getId
+			- J.field(label = "message:common.path.label")
+				= model.getPath
+			- J.field(label = "message:common.type.label")
+				= model.getType
+			- J.field(label = "message:applications.application.applicationTime.label")
+				= applicationTime
+		- J.group(label = "message:applications.application.targets.label")
+			.table
+				- if(!jEnv.isCloud)	
+					- if(model.isSetTargetAllServers && model.getTargetAllServers)
+						- J.field(label = "message:common.server.label")
+							= "ALL"
+						- J.field(label = "message:common.cluster.label")
+							= "ALL"
+				- model.getTargetServer match
+					- case servers: java.util.List[ApplicationTargetType] if servers.size > 0 =>
+						- J.field(label = "message:common.server.label")
+							= servers.asScala.map(_.getName).mkString(",")
+					- case _ =>
+				- if(!jEnv.isCloud)	
+					- model.getTargetCluster match
+						- case clusters: java.util.List[ApplicationTargetType] if clusters.size > 0 =>
+							- J.field(label = "message:common.cluster.label")
+								= clusters.asScala.map(_.getName).mkString(",")
+						- case _ =>
+				- if (serverStatus.size > 0)
+					- J.field(label = "message:applications.application.runningServers.label")
+						%ul
+							- val RUNNING: String = S.message("level.RUNNING")
+							- serverStatus.foreach
+								- case (serverName, RUNNING) =>
+									- val url = J.buildUri("/applications/applications/{applicationID}/{server}", appId, serverName)
+									%li
+										%a(href="#{url}") = s"$serverName [$RUNNING]"
+								- case (serverName, status) =>
+									%li
+										= s"$serverName [$status]"
+
+
+
+		- J.group(label = "message:applications.common.options.label")
+			.table
+				- val ISOLATED: String = S.message("level.ISOLATED")
+				- if (model.getClassloading == ISOLATED)
+					- J.field(label = "message:applications.application.classloading.label")
+						= S.message("level.ISOLATED")
+				- if (model.getUseFastDeploy)
+					- J.field(label = "message:applications.application.fastDeploy.label")
+						%input(type = "checkbox" checked="checked")
+				- if (model.getKeepGenerated)
+					- J.field(label = "message:applications.application.keepGenerated.label")
+						%input(type = "checkbox" checked="checked")
+				- if (model.getShared)
+					- J.field(label = "message:applications.application.shared.label")
+						%input(type = "checkbox" checked="checked")
+				- if (hasText(model.getSecurityDomainName))
+					- J.field(label = "message:applications.application.securityDomainName.label")
+						= model.getSecurityDomainName
+				- if (model.getAutoRedeployInterval != null)
+					- J.field(label = "message:applications.application.autoRedeployInterval.label")
+						= model.getAutoRedeployInterval
+				- if (model.getPlan != null)
+					- J.field(label = "message:applications.application.plan.label")
+						- val url = J.buildUri("/applications/deployment-plans/{name}", model.getPlan)
+						%a(href="#{url}") = model.getPlan
+				- if (model.getContextPath != null)
+					- J.field(label = "message:applications.application.contextPath.label")
+						= model.getContextPath
+				- if (model.getNodeJavaContext)
+					- J.field(label = "message:applications.application.nodeJavaContext.label")
+						%input(type = "checkbox" checked="checked")
+	.lineBar
+
+

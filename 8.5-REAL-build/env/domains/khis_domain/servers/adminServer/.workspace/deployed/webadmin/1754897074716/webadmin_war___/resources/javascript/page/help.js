@@ -1,0 +1,1 @@
+require(["jquery"],function(e){return e("nav").on("click","ul.first > li > a",function(t){var n;return n=e(this).parent("li"),n.hasClass("selected")?n.removeClass("selected"):n.addClass("selected").siblings("li").removeClass("selected"),!1})});

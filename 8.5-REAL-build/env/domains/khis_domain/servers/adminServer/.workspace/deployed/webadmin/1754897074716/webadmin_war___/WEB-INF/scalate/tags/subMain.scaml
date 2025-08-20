@@ -1,0 +1,18 @@
+-@ var body: String
+-@ var base: String = J.base
+-@ var title: String = null
+-@ var description: String = null
+-@ var alert: String = null
+
+%section
+	%h2.title
+		= J.title(title, base)
+
+	.subDescription
+		%p.description
+			= J.message(description, base, "[Description]")
+
+		- if (hasText(alert))
+			%p.alert
+				= alert
+	!= body

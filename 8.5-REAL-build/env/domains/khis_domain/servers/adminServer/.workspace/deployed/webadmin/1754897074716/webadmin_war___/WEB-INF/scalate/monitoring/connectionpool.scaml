@@ -1,0 +1,58 @@
+-@ val serverName: String = null
+-@ val model: List[TabularData] = null
+-@ val detail: (String, String, List[TabularData]) = null
+-@ val statement: (String, String, List[TabularData]) = null
+
+- layout("/scalate/layouts/main.scaml", Map("description" -> "message:monitoring.connectionpool.description", "title" -> "message:monitoring.connectionpool.title"))
+	- J.base = "monitoring.connectionpool"
+
+	- J.layout("accordian", Map("selected" -> serverName, "baseUri" -> "/monitoring/connectionpool"), true)
+		- if (detail != null)
+			- detail._3.foreach
+				- data =>
+					= Tabular.render(null, data)
+						- case (-1, displayNames) =>
+							- Item.checkallCustom(".tableType", name = "selectedID", col = "30px", disabled = false)
+								- row =>
+									- val isActive = if(row(1).toString.toLowerCase.equals("active")) true else false
+									- (row(0).toString, !isActive, false)
+						- case (20, displayNames) =>
+							- Item(null, "130px")
+								- (index, row) =>
+									- val isActive = if(row(1).toString.toLowerCase.equals("active")) true else false
+									- val id = row(0)
+									- val returnUrl = J.buildUri("/monitoring/connectionpool/{serverName}/{id}/return/{cid}", serverName, detail._1, id)
+									- val destroyUrl = J.buildUri("/monitoring/connectionpool/{serverName}/{id}/destroy/{cid}", serverName, detail._1, id)
+									- J.render("formButton", Map("label" -> "message:monitoring.connectionpool.button.return", "action" -> returnUrl, "cssClass" -> "bt2", "method" -> "post", "disabled" -> !isActive))
+									- J.render("formButton", Map("label" -> "message:monitoring.connectionpool.button.destroy", "action" -> destroyUrl, "disabled" -> !isActive, "cssClass" -> "bt2", "method" -> "post", "confirm" -> true, "message" -> "message:monitoring.connectionpool.button.destroy.caution"))
+					.buttonGroup
+						- val url = J.buildUri("/monitoring/connectionpool/{serverName}/{id}", serverName, detail._1)
+						- J.render("formButton", Map("label" -> "message:monitoring.connectionpool.enable.button", "action" -> {url + "/enable"}, "cssClass" -> "bt2", "method" -> "post"))
+						- J.render("formButton", Map("label" -> "message:monitoring.connectionpool.shrink.button", "action" -> {url + "/shrink"}, "cssClass" -> "bt2", "method" -> "post"))
+						- J.render("formButton", Map("label" -> "message:monitoring.connectionpool.disable.button", "action" -> {url + "/disable"}, "cssClass" -> "bt2", "method" -> "post"))
+						- J.render("formButton", Map("label" -> "message:monitoring.connectionpool.refresh.button", "action" -> {url + "/refresh"}, "cssClass" -> "bt2", "method" -> "post"))
+						- J.render("formButton", Map("label" -> "message:common.create.button", "action" -> {url + "/create"}, "cssClass" -> "bt2", "method" -> "post"))
+						- J.render("formButton", Map("label" -> "message:monitoring.connectionpool.button.return", "action" -> url, "cssClass" -> "bt2", "method" -> "post", "name" -> "return", "confirm" -> true, "appendTarget" -> "input[name=selectedID]"))
+						- J.render("formButton", Map("label" -> "message:monitoring.connectionpool.button.destroy", "action" -> url, "cssClass" -> "bt2", "method" -> "post", "name" -> "destroy", "confirm" -> true, "message" -> "message:monitoring.connectionpool.button.destroy.caution", "appendTarget" -> "input[name=selectedID]"))
+		- else if (statement != null)
+			- statement._3.foreach
+				- data =>
+					= Tabular.render(null, data)()
+		- if (model != null)
+			- model.foreach
+				- data =>
+					= Tabular.render(null, data)
+						- case (0, displayNames) =>
+							- Item(displayNames(0))
+								- (index, row) =>
+									- val id = row(0).toString.stripSuffix("*").trim
+									- val url = J.buildUri("/monitoring/connectionpool/{serverName}/{id}", serverName, id)
+									%a(href="#{url}") = row(0)
+						- case (20, displayNames) =>
+							- Item(null, "55px")
+								- (index, row) =>
+									- val id = row(0).toString.stripSuffix("*").trim
+									- val url = J.buildUri("/monitoring/connectionpool/{serverName}/{id}/stmt", serverName, id)
+									%a.button.bt2(href="#{url}") 
+										%span.button-text = S.message("monitoring.connectionpool.stmt.button")
+

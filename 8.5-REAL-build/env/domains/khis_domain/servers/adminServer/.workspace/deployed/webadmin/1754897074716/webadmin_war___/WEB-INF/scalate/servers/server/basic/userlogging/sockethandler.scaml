@@ -1,0 +1,10 @@
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:server.log.sockethandler.title"))
+	- J.base = "domain.servers.server.user-logging.handler.socket-handler"
+
+	- val isReadonly = if(isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 0, "second" -> 5))
+	- render("/WEB-INF/scalate/common/sockethandler.scaml")

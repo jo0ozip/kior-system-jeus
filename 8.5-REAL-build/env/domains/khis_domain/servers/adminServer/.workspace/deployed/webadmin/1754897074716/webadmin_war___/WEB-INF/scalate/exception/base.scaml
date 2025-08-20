@@ -1,0 +1,41 @@
+-@ val title: String
+-@ val description: String
+-@ val printException: Boolean = true
+-@ val errorButtons: String = null
+
+- layout("/WEB-INF/scalate/layouts/base.scaml")
+	- J.header
+		%link(rel="text/css" rel="stylesheet" href="#{contextPath}/resources/less/exception.css")
+
+	.color-line
+		.line1
+		.line2
+
+	.error
+		%h1
+			= S.message("page.main.title")
+		.error_content
+			.error_description
+				%p.title
+					!= title
+				%p.description
+					!= description
+				.buttonGroup
+					%a.button.btn_type03(href="javascript:history.back();")
+						%span.button-text = S.message("common.navigation.goto.previous")
+					- if({contextPath} == null || {contextPath} == "")
+						%a.button.btn_type04(href="/")
+							%span.button-text = S.message("common.navigation.goto.home")
+					- else
+						%a.button.btn_type04(href="#{contextPath}")
+							%span.button-text = S.message("common.navigation.goto.home")
+					!= errorButtons
+			- if (printException)
+				- attributes.get("javax.servlet.error.exception") match
+					- case Some(exception: Throwable) =>
+						%pre<
+							= Utils.printStacktrace(exception)
+					- case _ =>
+		%footer
+			= S.message("common.copyright")
+

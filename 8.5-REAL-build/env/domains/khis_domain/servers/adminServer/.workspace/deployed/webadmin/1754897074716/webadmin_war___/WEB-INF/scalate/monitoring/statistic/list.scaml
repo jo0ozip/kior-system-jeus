@@ -1,0 +1,33 @@
+-@ val userDefined: List[TabularData]
+
+- layout("/scalate/layouts/main.scaml", Map("description" -> "message:monitoring.statistic.description", "title" -> "message:monitoring.statistic.title", "help" -> "monitoring.statistic"))
+	
+	- render("/scalate/menu/monitoring/statistic.scaml", Map("selected" -> 0))
+
+	%h2.title = S.message("monitoring.presets.title")
+
+	- userDefined.foreach
+		- data =>
+			= Tabular.render(null, data, false)
+				- case (1, dns) =>
+					- Item(dns(1), "250px")
+						- (index, row) =>
+							- val url = J.buildUri("/monitoring/statistic/{id}", row(0))										
+							%a(href="#{url}") = row(1)
+				- case (2, dns) =>
+					- Item(dns(2), List("pre-line"))
+						- (index, row) =>
+							= row(2)
+				- case (3, dns) =>
+					- Item("120px", List("center"),
+						- Head
+							- () =>
+								- val url = J.buildUri("/monitoring/statistic")
+								- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "button bt_add", "name" -> "create", "action" -> url))
+					- )
+						- (index, row) =>
+							- val url = J.buildUri("/monitoring/statistic/{id}", row(0))			
+							%a.button.bt2(href="#{url}/chart")
+								%span.button-text
+									= S.message("monitoring.statistic.chart.title")
+							- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "button bt_del", "action" -> url, "confirm" -> true))

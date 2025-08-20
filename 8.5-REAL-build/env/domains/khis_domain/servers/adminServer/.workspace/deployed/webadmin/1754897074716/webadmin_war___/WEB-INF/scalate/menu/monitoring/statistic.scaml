@@ -1,0 +1,37 @@
+-@ val selected: Int = 0
+-@ val createMode: Boolean = false
+-@ val id: String = ""
+-@ val name: String = ""
+
+%ul.tab01
+	-
+		J.render("tab", Map(
+			"items" -> {
+				val base = 
+					List(
+						TabItem(Utils.buildUri("/monitoring/statistic"), "message:menu.monitoring.statistic"),
+						TabItem(Utils.buildUri("/monitoring/statistic/settings"), "message:menu.monitoring.statistic.settings")
+					)
+				if(selected == 2) {
+					if(createMode) {
+						base ++ List(
+							TabItem(Utils.buildUri("/monitoring/statistic/{id}", id), "message:menu.monitoring.statistic.preset.create", true)
+						)
+
+					} else {
+						base ++ List(
+							TabItem(Utils.buildUri("/monitoring/statistic/{id}", id), name)
+						)
+					}
+
+				} else if(selected == 3){
+					base ++ List(
+						TabItem(Utils.buildUri("/monitoring/statistic/{id}", id), name),
+						TabItem(Utils.buildUri("/monitoring/statistic/{id}/chart", id), "message:menu.monitoring.statistic.chart")
+					)
+				} else {
+					base
+				}	
+			} ,
+			"selected" -> selected
+		))

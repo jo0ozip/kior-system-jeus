@@ -1,0 +1,42 @@
+-@ val serverName: String = null
+-@ val model: List[TabularData] = null
+-@ val detail: List[TabularData] = null
+
+- layout("/scalate/layouts/main.scaml", Map("description" -> "message:monitoring.osgi.description", "title" -> "message:monitoring.osgi.title"))
+	- J.base = "monitoring.osgi"
+
+	- J.layout("accordian", Map("selected" -> serverName, "baseUri" -> "/monitoring/osgi"), true)
+		- if (model != null)
+			- model.foreach
+				- data =>
+					- val footer = 
+						- (footer: String) =>
+							- if (hasText(footer))
+								%pre<
+									~ footer
+					= Tabular.render(null, data, customFooter = footer)
+						- case (0, dns) =>
+							- Item(dns(0))
+								- (index, row) =>
+									-
+										val name = data.getFooter match {
+											case null | "" =>
+												data.getTitle.split("/", 2).toList match {
+													case _ :: context :: Nil if hasText(context) =>
+														if (row(0).toString().startsWith("/"))
+															context + row(0).toString
+														else
+															context + "/" + row(0).toString
+													case _ =>
+														row(0)
+												}
+											case _ =>
+												row(0)
+										}
+
+									- val url = J.buildUri("/monitoring/osgi/{serverName}/{name}", serverName, name)
+									%a(href="#{url}") = row(0)
+		- if (detail != null)
+			- detail.foreach
+				- data =>
+					= Tabular.render(null, data)()

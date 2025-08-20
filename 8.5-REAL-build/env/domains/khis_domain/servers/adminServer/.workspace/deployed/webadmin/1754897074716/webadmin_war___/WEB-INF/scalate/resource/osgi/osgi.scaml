@@ -1,0 +1,27 @@
+-@ val model: List[OsgiFrameworkType] = Nil
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:resources.osgi-frameworks.title"))
+	- J.base = "domain.resources.osgi-frameworks"
+	%h2.title
+		= J.title("message:resources.osgi-frameworks.title", J.base)
+
+	= Table.sortable(null, model, sortBy = {r: OsgiFrameworkType => r.getName})
+		- case 1 =>
+			- Item("message:header.name")
+				- (index, row) =>
+					- val url = J.buildUri("/resource/osgiFramework/{name}", row.getName)
+					%a(href="#{url}") = row.getName
+		- case 2 =>
+			- Item("message:header.jndi-export-name")
+				- (index, row) =>
+					= row.getJndiExportName
+		- case 3 =>
+			- Item("90px", List("center"),
+				- Head
+					- () =>
+						- val url = J.buildUri("/resource/osgiFramework")
+						- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "button bt_add", "name" -> "create", "disabled" -> !hasLock, "action" -> url))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/resource/osgiFramework/{name}", row.getName)
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "button bt_del", "disabled" -> !hasLock, "action" -> url))

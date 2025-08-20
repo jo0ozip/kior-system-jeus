@@ -1,0 +1,1 @@
+require(["jquery","jeus/radio","lodash"],function(e,t,n){return e("body").on("change","input.eventChange[type='radio']",function(n){return t(e(this))})});

@@ -1,0 +1,63 @@
+-@ val __InCluster: String = null
+-@ val serverName: String
+-@ val jndiinfos: List[JndiInfoType]
+-@ val jndiinfo: JndiInfoType = null
+-@ val createMode: Boolean = false
+
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("alert" -> __InCluster, "base" -> "domain.servers.server.res-ref", "title" -> "message:servers.resref.title"))
+	- J.base = "domain.servers.server.res-ref"
+	- val isReadonly = if(!createMode && isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 0, "second" -> 1))
+
+	%h2.title
+		= J.title("message:servers.resref.title", J.base)
+	= Table.render(null, jndiinfos)
+		- case 1 =>
+			- Item("message:header.ref-name")
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{serverName}/resref/{refName}", serverName, row.getRefName())
+					%a(href="#{url}") = row.getRefName()
+		- case 2 =>
+			- Item("message:header.export-name", "40%")
+				- (index, row) =>
+					= row.getExportName
+		- case 3 =>
+			- Item("90px", List("center"),
+				- Head
+					- () =>
+						- J.render("formButton", Map("name" -> "create", "label" -> "message:common.add.button", "cssClass" -> "bt_add", "disabled" -> {!hasLock || isReadonly}))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{serverName}/resref/{refName}", serverName, row.getRefName())
+					- J.render("formButton", Map("action" -> url, "method" -> "delete", "label" -> "message:common.remove.button", "cssClass" -> "bt_del", "disabled" -> {!hasLock || isReadonly}))
+	- if (jndiinfo != null)
+		- J.base = "domain.servers.server.res-ref.jndi-info"	
+
+		- J.layout("subMain", Map("title" -> "message:servers.resref.jndi-info.label"))
+			%form(method="post" action="#{requestUri}")
+				- S.modelAttribute = "jndiinfo"
+				- J.render("createMode")
+				- J.render("fieldIcons")
+				- var basic = "disabledbasic"
+				- if(!isReadonly)
+					- J.render("buttons")
+					- basic = "basic"
+
+				- J.layout(basic)
+					.table
+						- J.field(schema = ".ref-name")
+							- if (createMode)
+								- J.input()
+							- else
+								= jndiinfo.getRefName()
+								- J.hidden()
+						- J.field(schema = ".export-name")
+							- J.input()
+
+				.lineBar
+				- if(!isReadonly)
+					- J.render("buttons")

@@ -1,0 +1,57 @@
+-@ val serverName: String
+-@ val valves: List[ValveType]
+-@ val valve: ValveType = null
+-@ val createMode: Boolean = false
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:servers.pipeline.title"))
+	- J.base = "domain.servers.server.web-engine.pipeline"
+	- val isReadonly = !createMode && isAutoed
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 2, "second" -> 0, "third" -> 6))
+
+	%h2.title
+		= J.title("message:servers.pipeline.title", J.base)
+
+	= Table.render(null, valves)
+		- case 1 =>
+			- Item("message:header.valve-class-name")
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{server}/engine/webengine/pipeline/valve/{className}", serverName, row.getClassName)
+					%a(href="#{url}") = row.getClassName
+		- case 2 =>
+			- Item("90px", List("center"),
+				- Head
+					- () =>
+						- val url = J.buildUri("/servers/{server}/engine/webengine/pipeline", serverName)
+						- J.render("formButton", Map("label" -> "message:common.add.button", "action" -> url, "name" -> "create", "cssClass" -> "bt_add", "disabled" -> {!hasLock || isReadonly}))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{server}/engine/webengine/pipeline/valve/{className}", serverName, row.getClassName)
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "action" -> url, "method" -> "delete", "cssClass" -> "bt_del", "disabled" -> {!hasLock || isReadonly}))
+	- if (valve != null)
+		- J.base = "domain.servers.server.web-engine.pipeline.valve"
+
+		- J.layout("subMain", Map("title" -> "message:servers.pipeline.valve.label"))
+			%form(method="post" action="#{requestUri}")
+				- S.modelAttribute = "valve"
+				- J.render("createMode")
+				- J.render("fieldIcons")
+				- var basic = "disabledbasic"
+				- if(!isReadonly)
+					- J.render("buttons")
+					- basic = "basic"
+
+				- J.layout(basic)
+					.table
+						- J.field(schema = ".class-name")
+							- if (createMode)
+								- J.input()
+							- else
+								= valve.getClassName
+								- J.hidden()
+						- J.field(schema = ".property")
+							- J.textarea()
+
+				.lineBar
+				- if(!isReadonly)
+					- J.render("buttons")

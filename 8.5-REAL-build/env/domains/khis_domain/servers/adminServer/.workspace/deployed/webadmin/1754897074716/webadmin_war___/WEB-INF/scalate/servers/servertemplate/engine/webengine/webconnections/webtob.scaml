@@ -1,0 +1,105 @@
+-@ val createMode: Boolean = false
+-@ val model: WebtobConnectorType
+-@ val serverTemplateName: String
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:server.web-engine.web-connections.webtob-connector.title"))
+	- J.base = "domain.server-templates.server-template.web-engine.web-connections.webtob-connector"
+	- render("/WEB-INF/scalate/menu/server-template.scaml", Map("first" -> 2, "second" -> 0, "third" -> 3))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".name")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getName
+				- J.field(schema = ".output-buffer-size")
+					- J.input()
+					%span.unit byte
+				- J.field(schema = ".wjp-version")
+					- J.select(options = List("", "1", "2"))
+				- J.field(schema = ".registration-id")
+					- J.input()
+				- J.field(schema = ".hth-count")
+					- J.input()
+				- J.field(schema = ".read-timeout")
+					- J.input()
+					%span.unit = S.message("common.ms")
+			- J.group(schema = ".network-address", noBinding = false, attributes = Map("front" -> "choice", "choiceGroup" -> "addressGroup"))
+				.table
+					- J.field(schema = ".port")
+						- J.input()
+					- J.field(schema = ".ip-address")
+						- J.input()
+			- J.group(schema = ".domain-socket-address", noBinding = false, attributes = Map("front" -> "choice", "choiceGroup" -> "addressGroup"))
+				.table
+					- J.field(schema = ".webtob-ipcbaseport")
+						- J.input()
+					- J.field(schema = ".webtob-home")
+						- J.input()
+
+			- render("webtobthreadpool.scaml")
+
+		- J.layout("advanced")
+			.table
+			- layout("common.scaml")
+				- J.field(schema = ".reconnect-interval")
+					- J.input()
+					%span.unit = S.message("common.ms")
+				- J.field(schema = ".reconnect-count-for-backup")
+					- J.input()
+				- J.field(schema = ".send-buffer-size")
+					- J.input()
+					%span.unit byte
+				- J.field(schema = ".receive-buffer-size")
+					- J.input()
+					%span.unit byte
+				- J.field(schema = ".request-prefetch")
+					- J.checkbox()
+				- J.field(schema = ".connection-type")
+					- J.select()
+			- J.group(schema = ".secure", noBinding = false, attributes = Map("tail" -> "checkboxForGroup"))
+				.table
+					- J.field(schema = ".trust-store-file-path")
+						- J.input()
+					- J.field(schema = ".trust-store-file-password")
+						- J.password()
+					- J.field(schema = ".trust-store-file-type")
+						- J.input()
+					- J.field(schema = ".key-store-file-path")
+						- J.input()
+					- J.field(schema = ".key-store-file-password")
+						- J.password()
+					- J.field(schema = ".private-key-password")
+						- J.password()
+					- J.field(schema = ".key-store-file-type")
+						- J.input()
+					- J.field(schema = ".secure-protocol-name")
+						- J.input()
+					- J.field(schema = ".trust-manager-factory-algorithm-name")
+						- J.input()
+					- J.field(schema = ".key-manager-factory-algorithm-name")
+						- J.input()
+			- J.group(schema = ".webtob-backup", noBinding = false, attributes = Map("tail" -> "checkboxForGroup"))
+				.table
+				- J.group(schema = ".network-address", noBinding = false, attributes = Map("front" -> "choice", "choiceGroup" -> "backupAddressGroup"))
+					.table
+						- J.field(schema = ".port")
+							- J.input()
+						- J.field(schema = ".ip-address")
+							- J.input()
+				- J.group(schema = ".domain-socket-address", noBinding = false, attributes = Map("front" -> "choice", "choiceGroup" -> "backupAddressGroup"))
+					.table
+						- J.field(schema = ".webtob-ipcbaseport")
+							- J.input()
+						- J.field(schema = ".webtob-home")
+							- J.input()
+		.lineBar
+		- J.render("buttons")
+

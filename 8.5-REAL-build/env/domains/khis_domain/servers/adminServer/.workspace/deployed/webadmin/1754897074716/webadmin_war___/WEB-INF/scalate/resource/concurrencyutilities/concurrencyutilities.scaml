@@ -1,0 +1,94 @@
+-@ val managedexecutorservices: List[ManagedExecutorServiceType]
+-@ val managedscheduledexecutorservices: List[ManagedScheduledExecutorServiceType]
+-@ val contextservices: List[ContextServiceType]
+-@ val managedthreadfactories: List[ManagedThreadFactoryType]
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:resources.concurrency-utilities-resource.title", "help" -> "domain.resources.concurrency-utilities"))
+	- J.base = "domain.resources"
+	%h2.title
+		= J.title("message:resources.managed-executor-service.title", J.base)
+
+	= Table.sortable(null, managedexecutorservices, sortBy = {r: ManagedExecutorServiceType => r.getExportName})
+		- case 1 =>
+			- Item("message:header.export-name", "40%")
+				- (index, row) =>
+					- val url = J.buildUri("/resource/concurrencyutilities/managedexecutorservices/{exportName}", row.getExportName)
+					%a(href="#{url}") = row.getExportName
+		- case 2 =>
+			- Item("message:header.long-running-task")
+				- (index, row) =>
+					= row.getLongRunningTask
+		- case 3 =>
+			- Item("90px", List("center"),
+				- Head
+					- () =>
+					- val url = J.buildUri("/resource/concurrencyutilities/managedexecutorservices")
+					- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "button bt_add", "name" -> "create", "disabled" -> !hasLock, "action" -> url))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/resource/concurrencyutilities/managedexecutorservices/{exportName}", row.getExportName)
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "button bt_del", "disabled" -> !hasLock, "action" -> url))
+
+	%h2.title
+		= J.title("message:resources.managed-scheduled-executor-service.title", J.base)
+
+	= Table.sortable(null, managedscheduledexecutorservices, sortBy = {r: ManagedScheduledExecutorServiceType => r.getExportName})
+		- case 1 =>
+			- Item("message:header.export-name", "40%")
+				- (index, row) =>
+					- val url = J.buildUri("/resource/concurrencyutilities/managedscheduledexecutorservices/{exportName}", row.getExportName)
+					%a(href="#{url}") = row.getExportName
+		- case 2 =>
+			- Item("message:header.long-running-task")
+				- (index, row) =>
+					= row.getLongRunningTask
+		- case 3 =>
+			- Item("90px", List("center"),
+				- Head
+					- () =>
+					- val url = J.buildUri("/resource/concurrencyutilities/managedscheduledexecutorservices")
+					- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "button bt_add", "name" -> "create", "disabled" -> !hasLock, "action" -> url))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/resource/concurrencyutilities/managedscheduledexecutorservices/{exportName}", row.getExportName)
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "button bt_del", "disabled" -> !hasLock, "action" -> url))
+
+	%h2.title
+		= J.title("message:resources.context-service.title", J.base)
+
+	= Table.sortable(null, contextservices, sortBy = {r: ContextServiceType => r.getExportName})
+		- case 1 =>
+			- Item("message:header.export-name")
+				- (index, row) =>
+					- val url = J.buildUri("/resource/concurrencyutilities/contextservices/{exportName}", row.getExportName)
+					%a(href="#{url}") = row.getExportName
+		- case 2 =>
+			- Item("90px", List("center"),
+				- Head
+					- () =>
+					- val url = J.buildUri("/resource/concurrencyutilities/contextservices")
+					- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "button bt_add", "name" -> "create", "disabled" -> !hasLock, "action" -> url))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/resource/concurrencyutilities/contextservices/{exportName}", row.getExportName)
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "button bt_del", "disabled" -> !hasLock, "action" -> url))
+
+	%h2.title
+		= J.title("message:resources.managed-thread-factory.title", J.base)
+
+	= Table.sortable(null, managedthreadfactories, sortBy = {r: ManagedThreadFactoryType => r.getExportName})
+		- case 1 =>
+			- Item("message:header.export-name")
+				- (index, row) =>
+					- val url = J.buildUri("/resource/concurrencyutilities/managedthreadfactories/{exportName}", row.getExportName)
+					%a(href="#{url}") = row.getExportName
+		- case 2 =>
+			- Item("90px", List("center"),
+				- Head
+					- () =>
+					- val url = J.buildUri("/resource/concurrencyutilities/managedthreadfactories")
+					- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "button bt_add", "name" -> "create", "disabled" -> !hasLock, "action" -> url))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/resource/concurrencyutilities/managedthreadfactories/{exportName}", row.getExportName)
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "button bt_del", "disabled" -> !hasLock, "action" -> url))

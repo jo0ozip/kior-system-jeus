@@ -1,0 +1,4 @@
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:server.log.filehandler.title"))
+	- J.base = "domain.server-templates.server-template.system-logging.handler.file-handler"
+	- render("/WEB-INF/scalate/menu/server-template.scaml", Map("first" -> 0, "second" -> 4))
+	- render("/WEB-INF/scalate/common/filehandler.scaml")

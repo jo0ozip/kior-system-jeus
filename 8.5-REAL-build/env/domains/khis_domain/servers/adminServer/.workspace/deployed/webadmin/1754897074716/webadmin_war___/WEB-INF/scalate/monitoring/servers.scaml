@@ -1,0 +1,142 @@
+- import jeus.tool.webadmin.Environment
+-@ val model: List[TabularData] = Nil
+-@ val groupType: String = null
+-@ val isRuntime: Boolean = false
+- val jEnv = S.eval[Environment]("@j_env")
+
+- layout("/scalate/layouts/main.scaml", Map("description" -> "message:monitoring.servers.description", "title" -> "message:monitoring.servers.title"))
+	- J.base = "monitoring.servers"
+	- if(!jEnv.isCloud)
+		- J.render("changeServerGroup")
+	%h2.title
+		- groupType match 
+			- case "node" =>
+				= S.message("common.servers.by.node")
+			- case "group" =>
+				= S.message("common.servers.by.group")
+			- case "cluster" =>
+				= S.message("common.servers.by.cluster")
+			- case _ =>
+				= S.message("monitoring.servers.title")
+	- model.foreach
+		- data =>
+			- data.getTitle match
+				- case null =>
+				- case title =>
+					%h3.title
+						= title
+			- val displayNames = data.getDisplayNames
+
+			%form(method="post" action="#{requestUri}")
+				%table.tableType
+					%caption
+						= S.message("monitoring.servers")
+					%colgroup
+						%col(style="width:30px")/
+						%col(style="width:160px")/
+						%col(style="width:150px")/
+						%col(style="width:130px")/
+						%col/
+						%col/
+					%thead
+						%tr
+							%th.first(scope="col" rowspan="2")
+								%input.checkall(type="checkbox")
+							%th.noBg(scope="col")
+								= displayNames.get(0)
+							%th.noBg(scope="col")
+								= displayNames.get(1)
+							%th.noBg(scope="col")
+								= displayNames.get(2)
+							%th.noBg(scope="col")
+								= displayNames.get(3)
+							%th.noBg(scope="col" colspan="2")
+								= displayNames.get(5)
+						%tr
+							%th(scope="col")
+								= displayNames.get(8)
+							%th(scope="col")
+								= displayNames.get(4)
+							%th(scope="col")
+								= displayNames.get(6)
+							%th.last.center(scope="col" colspan="3")
+								= displayNames.get(7)
+					%tbody
+						- data.getRows.asScala.zipWithIndex.foreach
+							- case (row, index) =>
+								%tr{:class => {if(index % 2 != 0) "even" else null}}
+									%td.first.center(rowspan="2")
+										- val serverName = row.get(0) match
+											- case serverName: String => if (serverName.endsWith("(*)")) serverName.substring(0, serverName.size - 3) else serverName
+										%input(type="checkbox" name="servers" value="#{serverName}")
+									%td
+										= row.get(0)
+									%td
+										= row.get(1)
+									%td
+										= row.get(2)
+									%td
+										= row.get(3)
+									%td(colspan="2")
+										= row.get(5)
+								%tr{:class => {if(index % 2 != 0) "even" else null}}
+									%td
+										- val engines = row.get(8).toString.split(',').map(_.trim)
+										- def render(engineName: String)
+											%span.on(class = "#{engineName}-status" title = engineName)
+												= s"$engineName-on"
+										- if(engines.contains("web"))
+											- render("webengine")
+										- if(engines.contains("ejb"))
+											- render("ejbengine")
+										- if(engines.contains("jms"))
+											- render("jmsengine")
+									%td
+										= row.get(4)
+									%td
+										= row.get(6)
+									%td(colspan="3")
+										= row.get(7)
+	.buttonGroup
+		- val hasConfigRole = SS.anyGranted(List("ROLE_CONFIG"))
+		- if(!jEnv.isCloud)
+			- J.dialog("formButton", Map("label" -> "message:common.start.button", "cssClass" -> "bt2", "disabled" -> isRuntime, "name" -> "start", "appendTarget" -> "input[name=servers]", "disabled" -> !hasConfigRole))
+				%article
+					%h2.title
+						= S.message("common.start.title")
+					%form(method="post" action="#{requestUri}")
+						.hidden
+						%input(type="hidden" name="start" value="start")
+						- J.layout("basic")
+							.table
+								- J.field(label = "message:common.force.label", description = "message:servers.startserver.force.description")
+									%input(type="checkbox" name="force")
+								- J.field(label = "message:monitoring.servers.common.standby.label", description = "message:servers.startserver.standby.description")
+									%input(type="checkbox" name="standby")
+								- J.field(label = "message:monitoring.servers.sequential.label", description = "message:servers.startserver.sequential.description")
+									%input(type="checkbox" name="seq")
+			- J.dialog("formButton", Map("label" -> "message:common.stop.button", "cssClass" -> "bt2", "disabled" -> isRuntime, "name" -> "stop", "appendTarget" -> "input[name=servers]", "disabled" -> !hasConfigRole))
+				%article
+					%h2.title
+						= S.message("common.stop.title")
+					%form(method="post" action="#{requestUri}")
+						.hidden
+						%input(type="hidden" name="stop" value="stop")
+						- J.layout("basic")
+							.table
+								- val choiceGroup = "stop-optionGroup_" + J.newID
+								- J.field(label = "message:common.timeout.label", description = "message:servers.stopserver.timeout.description", path = "timeout", noBinding = true, attributes = Map("front" -> "choice", "choiceGroup" -> choiceGroup, "choiceDisabled" -> false, "checked" -> false))
+									%input(type="text" name="timeout")
+								- J.field(label = "message:common.force.label", description = "message:servers.stopserver.force.description", path = "force", noBinding = true, attributes = Map("front" -> "choice", "choiceGroup" -> choiceGroup, "choiceDisabled" -> false, "checked" -> false))
+									%input(type="checkbox" name="force" value="true" checked="checked" onclick="return false;")
+								- J.field(label = "message:common.graceful.label", description = "message:servers.stopserver.graceful.description", path = "graceful", noBinding = true, attributes = Map("front" -> "choice", "choiceGroup" -> choiceGroup, "choiceDisabled" -> false, "checked" -> false))
+									%input(type="checkbox" name="graceful" value="true" checked="checked" onclick="return false;")
+		- J.render("formButton", Map("label" -> "message:monitoring.servers.resume.button", "cssClass" -> "bt2", "disabled" -> isRuntime, "method" -> "post", "name" -> "resume", "confirm" -> true, "appendTarget" -> "input[name=servers]", "disabled" -> !hasConfigRole))
+		- J.render("formButton", Map("label" -> "message:monitoring.servers.suspend.button", "cssClass" -> "bt2", "disabled" -> isRuntime, "method" -> "post", "name" -> "suspend", "confirm" -> true, "appendTarget" -> "input[name=servers]", "disabled" -> !hasConfigRole))
+		- J.render("formButton", Map("label" -> "message:monitoring.servers.dump.button", "cssClass" -> "bt2", "disabled" -> isRuntime, "method" -> "post", "name" -> "dump", "confirm" -> true, "appendTarget" -> "input[name=servers]"))
+		- J.render("formButton", Map("label" -> "message:monitoring.servers.garbage-collection.button", "cssClass" -> "bt2", "disabled" -> isRuntime, "method" -> "post", "name" -> "garbage-collection", "confirm" -> true, "appendTarget" -> "input[name=servers]", "disabled" -> !hasConfigRole))
+		- J.init
+			:plain
+				require(["jeus/checkall"], function(checkall){
+					checkall(".tableType", "input[name=servers]");
+				});

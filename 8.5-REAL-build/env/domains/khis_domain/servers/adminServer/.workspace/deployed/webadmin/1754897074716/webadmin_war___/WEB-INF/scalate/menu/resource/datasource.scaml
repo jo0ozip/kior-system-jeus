@@ -1,0 +1,16 @@
+-@ val selected: Int = 0
+-@ val disabled: Boolean = false
+
+-@ val dataSourceId: String = ""
+
+- val url = Utils.buildUri("/resource/datasource/database/{dataSourceId}", dataSourceId)
+
+%ul.tab01
+	-
+		J.render("tab", Map(
+			"items" -> List(
+				TabItem(url, "message:menu.basic"),
+				TabItem(url + "/connectionpool", "message:menu.monitoring.connectionpool")
+			),
+			"selected" -> selected
+		))

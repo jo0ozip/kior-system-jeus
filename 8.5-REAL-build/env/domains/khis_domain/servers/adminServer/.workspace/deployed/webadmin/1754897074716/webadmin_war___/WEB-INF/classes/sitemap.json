@@ -1,0 +1,522 @@
+[
+	{
+		"label" : "menu.nodes",
+		"url" : "/nodes",
+		"security" : ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+	},
+	{
+		"label" : "menu.domain",
+		"url" : "/domain",
+		"security" : ["ROLE_CONFIG_READONLY", "ROLE_READONLY"],
+		"horizontal" : true,
+		"children" : [
+			{
+				"label" : "menu.basic",
+				"url" : ""
+			},
+			{
+				"label" : "menu.common.lifecycle",
+				"url" : "/lifecycle"
+			}
+		]
+	},
+	{
+		"label" : "menu.session",
+		"url" : "/session",
+		"security" : ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+	},
+	{
+		"label" : "menu.clusters",
+		"url" : "/clusters",
+		"security": ["ROLE_CONFIG_READONLY_DEFAULT_LICENSE", "ROLE_READONLY_DEFAULT_LICENSE"],
+		"children": [
+			{
+				"label" : "${name}",
+				"url" : "/{cluster}",
+				"horizontal" : true,
+				"children" : [
+					{
+						"label" : "menu.basic",
+						"url" : ""
+					},
+					{
+						"label" : "menu.clusters.resref",
+						"url" : "/resref"
+					},
+					{
+						"label" : "menu.clusters.sessionclusterconfig",
+						"url" : "/sessionclusterconfig"
+					},
+					{
+						"label" : "menu.clusters.jmsresource",
+						"url" : "/jmsresource"
+					},
+					{
+						"label" : "menu.common.lifecycle",
+						"url" : "/lifecycle"
+					}
+				]
+			}
+		]
+	},
+	{
+		"label" : "menu.servers",
+		"url" : "/servers",
+		"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"],
+		"children": [
+			{
+				"label" : "${name}",
+				"url" : "/{server}",
+				"children": [
+					{
+						"label": "menu.basic",
+						"url": "",
+						"horizontal" : true,
+						"children": [
+							{
+								"label": "menu.basicinfo",
+								"url": ""
+							},
+							{
+								"label": "menu.servers.basic.resref",
+								"url": "/resref"
+							},
+							{
+								"label": "menu.servers.basic.namingserver",
+								"url": "/namingserver"
+							},
+							{
+								"label": "menu.servers.basic.systemthreadpool",
+								"url": "/systemthreadpool"
+							},
+							{
+								"label": "menu.servers.basic.systemlogging",
+								"url": "/systemlogging"
+							},
+							{
+								"label": "menu.servers.basic.userlogging",
+								"url": "/userlogging"
+							},
+							{
+								"label": "menu.servers.basic.tmconfig",
+								"url": "/tmconfig"
+							}
+						]
+					},
+					{
+						"label": "menu.servers.resource",
+						"url": "/resource",
+						"container": true,
+						"horizontal" : true,
+						"children": [
+							{
+								"label": "menu.servers.resource.listeners",
+								"url": "/listeners"
+							},
+							{
+								"label": "menu.servers.resource.jms",
+								"url": "/jms"
+							},
+							{
+								"label": "menu.servers.resource.jmxmanager",
+								"url": "/jmxmanager"
+							},
+							{
+								"label": "menu.servers.resource.scheduler",
+								"url": "/scheduler"
+							},
+							{
+								"label": "menu.servers.resource.lifecycle",
+								"url": "/lifecycle"
+							},
+							{
+								"label": "menu.servers.resource.external",
+								"url": "/external"
+							}
+						]
+					},
+					{
+						"label": "menu.servers.engine",
+						"url": "/engine",
+						"container": true,
+						"children": [
+							{
+								"label": "menu.servers.webengine",
+								"url": "/webengine",
+								"horizontal": true,
+								"children": [
+									{
+										"label": "menu.basic",
+										"url": ""
+									},
+									{
+										"label": "menu.servers.webengine.jspengine",
+										"url": "/jspengine"
+									},
+									{
+										"label": "menu.servers.webengine.virtualhost",
+										"url": "/virtualhost"
+									},
+									{
+										"label": "menu.servers.webengine.webconnections",
+										"url": "/webconnections"
+									},
+									{
+										"label": "menu.servers.webengine.accesslog",
+										"url": "/accesslog"
+									},
+									{
+										"label": "menu.servers.webengine.sessionconfig",
+										"url": "/sessionconfig"
+									},
+									{
+										"label": "menu.servers.webengine.pipeline",
+										"url": "/pipeline"
+									}
+								]
+							},
+							{
+								"label": "menu.servers.jmsengine",
+								"url": "/jmsengine",
+								"horizontal": true,
+								"children": [
+									{
+										"label": "menu.basic",
+										"url": ""
+									},
+									{
+										"label": "menu.servers.jmsengine.serviceconfig",
+										"url": "/serviceconfig"
+									},
+									{
+										"label": "menu.servers.jmsengine.connectionfactory",
+										"url": "/connectionfactory"
+									},
+									{
+										"label": "menu.servers.jmsengine.persistencestore",
+										"url": "/persistencestore"
+									},
+									{
+										"label": "menu.servers.jmsengine.messagesort",
+										"url": "/messagesort"
+									}
+								]
+							},
+							{
+								"label": "menu.servers.ejbengine",
+								"url": "/ejbengine",
+								"horizontal": true,
+								"children": [
+									{
+										"label": "menu.basic",
+										"url": ""
+									},
+									{
+										"label": "menu.servers.ejbengine.activemanagement",
+										"url": "/activemanagement"
+									},
+									{
+										"label": "menu.servers.ejbengine.timerservice",
+										"url": "/timerservice"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	{
+		"label" : "menu.servers.template",
+		"url" : "/servers",
+		"security": ["ROLE_CONFIG_READONLY_DEFAULT_LICENSE", "ROLE_READONLY_DEFAULT_LICENSE"]
+	},
+	{
+		"label" : "menu.applications",
+		"url" : "/applications",
+		"security": ["ROLE_DEPLOY_READONLY", "ROLE_READONLY"],
+		"horizontal" : true,
+		"children": [
+			{
+				"label" : "menu.deployment-plan",
+				"url" : "/deployment-plans"
+			},
+			{
+				"label" : "menu.application.deployedlibraries",
+				"url" : "/deployedlibraries"
+			},
+			{
+				"label" : "",
+				"url" : "",
+				"children": [
+					{
+						"label" : "${name}",
+						"url" : "/applications/{application}"
+					}
+				]
+			}
+		]
+	},
+	{
+		"label" : "menu.security",
+		"url" : "/security",
+		"security": ["ROLE_SECURITY_READONLY", "ROLE_READONLY"],
+		"children": [
+			{
+				"label" : "${name}",
+				"url" : "/{securityDomain}",
+				"children": [
+					{
+						"label": "menu.security.name",
+						"url": ""
+					},
+					{
+						"label": "menu.security.cacheconfig",
+						"url": "/cacheconfig"
+					},
+					{
+						"label": "menu.security.keystoreconfig",
+						"url": "/keystoreconfig"
+					},
+					{
+						"label": "menu.security.securityservice",
+						"url": "/securityservice",
+						"children": [
+							{
+								"label": "menu.security.securityservice.authentication",
+								"url": "",
+								"horizontal": true,
+								"children": [
+									{
+										"label": "menu.security.securityservice.authentication.repositoryservice",
+										"url": ""
+									},
+									{
+										"label": "menu.security.securityservice.authentication.jaas",
+										"url": "/jaas"
+									},
+									{
+										"label": "menu.security.securityservice.authentication.custom",
+										"url": "/custom"
+									}
+								]
+							},
+							{
+								"label": "menu.security.securityservice.authorization",
+								"url": "/authorization",
+								"horizontal": true,
+								"children": [
+									{
+										"label": "menu.basic",
+										"url": ""
+									},
+									{
+										"label": "menu.security.securityservice.authorization.custom",
+										"url": "/custom"
+									}
+								]
+							},
+							{
+								"label": "menu.security.securityservice.identity",
+								"url": "/identity"
+							},
+							{
+								"label": "menu.security.securityservice.credentialmapping",
+								"url": "/credentialmapping"
+							},
+							{
+								"label": "menu.security.securityservice.credentialverification",
+								"url": "/credentialverification"
+							},
+							{
+								"label": "menu.security.securityservice.audit",
+								"url": "/audit"
+							},
+							{
+								"label": "menu.security.securityservice.subject",
+								"url": "/subject"
+							}
+						]
+					},
+					{
+						"label": "menu.security.customservice",
+						"url": "/customservice"
+					},
+					{
+						"label": "menu.security.subjectgroup",
+						"url": "/subjectgroup",
+						"horizontal": true,
+						"children": [
+							{
+								"label": "menu.security.subjectgroup.accounts",
+								"url": ""
+							},
+							{
+								"label": "menu.security.subjectgroup.policy",
+								"url": "/policy"
+							}
+						]
+					}
+				]
+			}
+		]
+	},
+	{
+		"label" : "menu.resource",
+		"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"],
+		"url" : "/resource",
+		"container": true,
+		"horizontal" : true,
+		"children": [
+			{
+				"label" : "menu.resource.datasource",
+				"url" : "/datasource"
+			},
+			{
+				"label" : "menu.resource.mailsource",
+				"url" : "/mailsource"
+			},
+			{
+				"label" : "menu.resource.urlsource",
+				"url" : "/urlsource"
+			},
+			{
+				"label" : "menu.resource.messagebridge",
+				"url" : "/messagebridge"
+			},
+			{
+				"label" : "menu.resource.customresource",
+				"url" : "/customresource"
+			},
+			{
+				"label" : "menu.resource.externalsource",
+				"url" : "/externalsource"
+			},
+			{
+				"label" : "menu.resource.externalresource",
+				"url" : "/externalresource"
+			},
+			{
+				"label" : "menu.resource.concurrencyutilities",
+				"url" : "/concurrencyutilities"
+			},
+			{
+				"label" : "menu.resource.osgi",
+				"url" : "/osgi"
+			}
+		]
+	},
+	{
+		"label" : "menu.monitoring",
+		"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"],
+		"url" : "/monitoring",
+		"container": true,
+		"children" : [
+			{
+				"label" : "menu.monitoring.thread",
+				"url" : "/thread"
+			},
+			{
+				"label" : "menu.monitoring.transaction",
+				"url" : "/transaction"
+			},
+			{
+				"label" : "menu.monitoring.mbean",
+				"url" : "/mbean"
+			},
+			{
+				"label" : "menu.monitoring.jndi",
+				"url" : "/jndi"
+			},
+			{
+				"label" : "menu.monitoring.web",
+				"url" : "/web",
+				"horizontal" : true,
+				"children" : [
+					{
+						"label" : "menu.monitoring.web.statistic",
+						"url" : "/statistics"
+					},
+					{
+						"label" : "menu.monitoring.web.listsession",
+						"url" : "/listsession"
+					}
+				]
+			},
+			{
+				"label" : "menu.monitoring.servers",
+				"url" : "/servers"
+			},
+			{
+				"label" : "menu.monitoring.jms",
+				"url" : "/jms",
+				"horizontal" : true,
+				"children" : [
+					{
+						"label" : "menu.monitoring.jms.destinations",
+						"url" : "/destinations"
+					},
+					{
+						"label" : "menu.monitoring.jms.durable",
+						"url" : "/durable"
+					},
+					{
+						"label" : "menu.monitoring.jms.clients",
+						"url" : "/clients"
+					},
+					{
+						"label" : "menu.monitoring.jms.pendingtransactions",
+						"url" : "/pendingtransactions"
+					}
+
+				]
+			},
+			{
+				"label" : "menu.monitoring.connectionpool",
+				"url" : "/connectionpool"
+			},
+			{
+				"label" : "menu.monitoring.osgi",
+				"url" : "/osgi"
+			},
+			{
+				"label" : "menu.monitoring.ejbtimer",
+				"url" : "/ejbtimer"
+			},
+			{
+				"label" : "menu.monitoring.system-info",
+				"url" : "/system-info"
+			},
+			{
+				"label" : "menu.monitoring.server-log",
+				"url" : "/server-log"
+			},
+			{
+				"label" : "menu.monitoring.statistic",
+				"url" : "/statistic"
+			},
+			{
+				"label" : "menu.monitoring.patch-info",
+				"url" : "/patch-info",
+				"horizontal" : true,
+				"children" : [
+					{
+						"label" : "menu.monitoring.patch-info.node",
+						"url" : "/node"
+					},
+					{
+						"label" : "menu.monitoring.patch-info.server",
+						"url" : "/server"
+					}
+
+				]
+			}
+		]
+	},
+	{
+		"label" : "menu.console",
+		"url" : "/console",
+		"security": ["ROLE_CONSOLE"]
+	}
+]

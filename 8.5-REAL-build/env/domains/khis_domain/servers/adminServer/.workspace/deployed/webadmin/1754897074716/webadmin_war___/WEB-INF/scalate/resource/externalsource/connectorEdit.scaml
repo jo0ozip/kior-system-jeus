@@ -1,0 +1,60 @@
+-@ val createMode: Boolean = false
+-@ val model: ConnectorType
+-@ val resourceAdapterModuleId: String = null
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:resources.connector.title"))
+	- J.base = "domain.resources.external-source.connector"
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".resource-adapter-module-id")
+					- if (createMode)
+						- J.input()
+					- else
+						= model.getResourceAdapterModuleId
+			- J.group(schema = ".worker-pool")
+				.table
+					- J.field(schema = ".min")
+						- J.input()
+					- J.field(schema = ".max")
+						- J.input()
+					- J.field(schema = ".queue-size")
+						- J.input()
+
+				- J.layout("advanced")
+					.table
+						- J.field(schema = ".keep-alive-time")
+							- J.input()
+							%span.unit = S.message("common.ms")
+						- J.field(schema = ".shutdown-timeout")
+							- J.input()
+							%span.unit = S.message("common.ms")
+
+		.lineBar
+		- J.render("buttons")
+
+	- if (!createMode)
+		%h2.title
+			= J.title("message:resources.connectionpool.title", J.base)
+		= Table.render(null, model.getConnectionPool.asScala.toList)
+			- case 1 =>
+				- Item("message:header.connection-pool-id")
+					- (index, row) =>
+						- val url = J.buildUri("/resource/externalsource/connector/{resourceAdapterModuleId}/connectionpool/{connectionPoolId}", resourceAdapterModuleId, row.getConnectionPoolId)
+						%a(href="#{url}") = row.getConnectionPoolId
+			- case 2 =>
+				- Item("90px", List("center"),
+					- Head
+						- () =>
+							- val url = J.buildUri("/resource/externalsource/connector/{resourceAdapterModuleId}/connectionpool", resourceAdapterModuleId)
+							- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "bt_add", "name" -> "create", "disabled" -> !hasLock, "action" -> url))
+				- )
+					- (index, row) =>
+						- val url = J.buildUri("/resource/externalsource/connector/{resourceAdapterModuleId}/connectionpool/{connectionPoolId}", resourceAdapterModuleId, row.getConnectionPoolId)
+						- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "bt_del", "disabled" -> !hasLock, "action" -> url))

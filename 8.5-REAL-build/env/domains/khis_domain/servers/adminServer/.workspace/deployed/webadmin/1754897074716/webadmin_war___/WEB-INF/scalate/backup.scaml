@@ -1,0 +1,38 @@
+-@ val model: List[TabularData] = null
+-@ val detail: (String, String) = null
+
+- layout("/scalate/layouts/main.scaml", Map("title" -> "message:backup.title", "description" -> "message:backup.description"))
+	- model.foreach
+		- data =>
+			- val customRow = (index: Int, row: List[Any]) =>
+				- if (detail != null && detail._1 == (row(0) + ""))
+					%tr
+						%td.content(colspan="#{data.getDisplayNames.size + 1}")
+							%pre<
+								= detail._2
+			= Tabular.render(null, data, customRow = customRow)
+				- case (0, displayNames) =>
+					- Item(displayNames(0), "220px")
+						- (index, row) =>
+							- if (detail != null && detail._1 == (row(0) + ""))
+								%a{:href => {J.buildUri("/backup")}} = row(0)
+							- else
+								- val fileName = row(0)
+								- val url = J.buildUri("/backup/{name}", fileName)
+								%a{:href => url} = fileName			
+				- case (1, displayNames) =>
+					- Item(displayNames(1), null, "pre-line")
+						- (index, row) =>
+							!= row(1)
+				- case (20, displayNames) =>
+					- Item("message:header.command", "90px", "center")	
+						- (index, row) =>
+							- val fileName = row(0).toString
+							- if(fileName.startsWith("domain_"))
+								- val url = J.buildUri("/backup/{name}", fileName)
+								- J.render("formButton", Map("label" -> "message:backup.rollback.label", "action" -> url, "cssClass" -> "bt2", "method" -> "post", "disabled" -> !hasLock, "confirm" -> true, "message" -> S.message("backup.rollback.confirm", List(fileName))))
+- J.init
+	:&plain
+		require(["jeus/scroll"], function(scroll) {
+			scroll("#{contextPath}/backup");
+		});

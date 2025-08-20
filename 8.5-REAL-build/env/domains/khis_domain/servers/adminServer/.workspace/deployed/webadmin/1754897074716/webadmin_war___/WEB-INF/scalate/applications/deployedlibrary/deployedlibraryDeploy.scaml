@@ -1,0 +1,47 @@
+- import jeus.tool.webadmin.controller.DeployedLibraryDeployVO
+- import jeus.tool.webadmin.Environment
+- val jEnv = S.eval[Environment]("@j_env")
+
+-@ val model: DeployedLibraryDeployVO
+-@ val default: String = null
+-@ val __servers: List[String] = Nil
+-@ val __clusters: List[String] = Nil
+
+
+- J.init
+	require(["jquery.MultiFile"]);
+	
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:menu.application.deployedlibrary"))
+	- J.base = "domain.deployed-libraries.deployed-library.library-versions"
+	- render("/WEB-INF/scalate/menu/application.scaml", Map("selected" -> 1))
+
+	%form(method="post" action="#{requestUri}")
+		%input(type="hidden" name="deploy" value="deploy")
+		- J.render("buttons", Map("useLock" -> false))
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".target-all-servers", path = "all")
+					%input(type="checkbox" name="all")
+				- J.field(schema = ".target-server", path = "servers")
+					- if (__servers == Nil)
+						= S.message("common.noExist.entry")
+					- else
+						-__servers.foreach
+							- server =>
+								%label
+									%input(type="checkbox" name="servers" value="#{server}")
+									= server
+								%br/
+				- if(!jEnv.isCloud)
+					- J.field(schema = ".target-cluster", path = "clusters")
+						- if (__clusters == Nil)
+							= S.message("common.noExist.entry")
+						- else
+							-__clusters.foreach
+								- cluster =>
+									%label
+										%input(type="checkbox" name="clusters" value="#{cluster}")
+										= cluster
+									%br/
+		.lineBar
+		- J.render("buttons", Map("useLock" -> false))

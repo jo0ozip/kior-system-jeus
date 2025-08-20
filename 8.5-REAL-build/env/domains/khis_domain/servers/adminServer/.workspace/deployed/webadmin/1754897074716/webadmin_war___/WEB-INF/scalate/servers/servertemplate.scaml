@@ -1,0 +1,118 @@
+-@ val model: ServerTemplateType
+-@ val serverTemplateName: String = null
+-@ val createMode: Boolean = false
+-@ val __dataSources: List[String] = Nil
+-@ val __customResourceRefs: List[String] = Nil
+-@ val __externalResourceRefs: List[String] = Nil
+-@ val __nodeNames: List[String]
+-@ val __InCluster: String = null
+-@ val __groups: List[String] = Nil
+
+-@ val running: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:common.server.servertemplate.label"))
+	- J.base = "domain.server-templates.server-template"
+	- render("/WEB-INF/scalate/menu/server-template.scaml", Map("first" -> 0, "second" -> 0, "disabled" -> createMode))
+
+	%form(method="post" action="#{requestUri}")
+		- J.render("createMode")
+
+		- J.render("fieldIcons")
+		- J.render("buttons")
+
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".name", noBinding = !createMode)
+					- if (createMode)
+						- J.input()
+					- else
+						= serverTemplateName
+				- J.field(schema = ".log-home")
+					- J.input()		
+				- J.field(schema = ".group")
+					- J.select(options = null :: __groups)
+				- J.field(schema = ".action-on-resource-leak")
+					- J.select()
+				- J.field(schema = ".data-source-remote-lookup")
+					- J.checkbox()
+				- J.field(schema = ".engine-init-on-startup")
+					- J.checkbox()
+				- J.field(schema = ".use-web-engine")
+					- J.checkbox()
+				- J.field(schema = ".use-ejb-engine")
+					- J.checkbox()
+				- J.field(schema = ".use-jms-engine")
+					- J.checkbox()
+				- J.field(schema = ".managed-executor-service")
+					- J.input()
+				- J.field(schema = ".managed-scheduled-executor-service")
+					- J.input()
+				- J.field(schema = ".context-service")
+					- J.input()
+				- J.field(schema = ".managed-thread-factory")
+					- J.input()		
+			- J.group(schema = ".jvm-config")
+				.table
+					- J.field(schema = ".jvm-option")
+						- J.textarea()
+			- J.group(schema = ".data-sources")
+				.table
+					- J.field(schema = ".data-source")
+						- if (__dataSources == Nil)
+							= S.message("common.noExist.entry")
+						- J.checkboxes(options = __dataSources)
+			- J.group(schema = ".custom-resource-refs")
+				.table
+					- J.field(schema = ".name")
+						- if (__customResourceRefs == Nil)
+							= S.message("common.noExist.entry")
+						- J.checkboxes(options = __customResourceRefs)
+			- J.group(schema = ".external-resource-refs")
+				.table
+					- J.field(schema = ".name")
+						- if (__externalResourceRefs == Nil)
+							= S.message("common.noExist.entry")
+						- J.checkboxes(options = __externalResourceRefs)
+		- J.layout("advanced")
+			.table
+			- J.group(schema = "")
+				.table
+					- J.field(alert = __InCluster, schema = ".use-MEJB")
+						- J.checkbox()
+					- J.field(alert = __InCluster, schema = ".class-ftp")
+						- J.checkbox()
+					- J.field(schema = ".log-stdout-to-raw-format")
+						- J.checkbox()
+					- J.field(schema = ".cwdp-group-id")
+						- J.input()
+				- J.group(schema = ".user-interceptor")
+					.table
+						- J.field(schema = ".preceding-command")
+							- J.input()
+						- J.field(schema = ".jeus-classloader-append-class-path")
+							- J.input()
+						- J.field(schema = ".jeus-classloader-append-dirs")
+							- J.input()
+						- J.field(schema = ".profile-class-option-name")
+							- J.input()
+						- J.field(schema = ".boot-classloader-append-class-path")
+							- J.input()
+				- J.group(schema = ".enable-interop", noBinding = false, alert = __InCluster, attributes = Map("tail" -> "checkboxForGroup"))
+					.table
+					- J.group(schema = ".interop-ssl-config")
+						.table
+							- J.field(schema = ".keystore-path")
+								- J.input()
+							- J.field(schema = ".keystore-alias")
+								- J.input()
+							- J.field(schema = ".keystore-password")
+								- J.password()
+							- J.field(schema = ".keystore-keypassword")
+								- J.password()
+							- J.field(schema = ".truststore-path")
+								- J.input()
+							- J.field(schema = ".truststore-password")
+								- J.password()
+
+		.lineBar
+		- J.render("buttons")

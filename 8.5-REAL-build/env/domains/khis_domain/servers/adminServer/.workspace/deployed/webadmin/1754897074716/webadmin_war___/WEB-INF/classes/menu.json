@@ -1,0 +1,164 @@
+[
+	{
+		"label" : "menu.domain",
+		"url" : "/domain",
+		"security" : ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+	},
+	{
+		"label" : "menu.session",
+		"url" : "/session",
+		"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+	},
+	{
+		"label" : "menu.clusters",
+		"url" : "/clusters",
+		"security": ["ROLE_CONFIG_READONLY_DEFAULT_LICENSE", "ROLE_READONLY_DEFAULT_LICENSE"]
+	},
+	{
+		"label" : "menu.servers",
+		"url" : "/servers",
+		"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+	},
+	{
+		"label" : "menu.applications",
+		"url" : "/applications",
+		"security": ["ROLE_DEPLOY_READONLY", "ROLE_READONLY"]
+	},
+	{
+		"label" : "menu.security",
+		"url" : "/security",
+		"security": ["ROLE_SECURITY_READONLY", "ROLE_READONLY"]
+	},
+	{
+		"label" : "menu.resource",
+		"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"],
+		"menus": [
+			{
+				"label" : "menu.resource.datasource",
+				"url" : "/resource/datasource",
+				"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.resource.mailsource",
+				"url" : "/resource/mailsource",
+				"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.resource.urlsource",
+				"url" : "/resource/urlsource",
+				"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.resource.messagebridge",
+				"url" : "/resource/messagebridge",
+				"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.resource.customresource",
+				"url" : "/resource/customresource",
+				"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.resource.externalsource",
+				"url" : "/resource/externalsource",
+				"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.resource.externalresource",
+				"url" : "/resource/externalresource",
+				"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.resource.concurrencyutilities",
+				"url" : "/resource/concurrencyutilities",
+				"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.resource.osgi",
+				"url" : "/resource/osgiFrameworks",
+				"security": ["ROLE_CONFIG_READONLY", "ROLE_READONLY"]
+			}
+		]
+	},
+	{
+		"label" : "menu.monitoring",
+		"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"],
+		"menus" : [
+			{
+				"label" : "menu.monitoring.thread",
+				"url" : "/monitoring/thread",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.transaction",
+				"url" : "/monitoring/transaction",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.mbean",
+				"url" : "/monitoring/mbean",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.jndi",
+				"url" : "/monitoring/jndi",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.web",
+				"url" : "/monitoring/web",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.servers",
+				"url" : "/monitoring/servers",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.jms",
+				"url" : "/monitoring/jms",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.connectionpool",
+				"url" : "/monitoring/connectionpool",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.osgi",
+				"url" : "/monitoring/osgi",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.ejbtimer",
+				"url" : "/monitoring/ejbtimer",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.system-info",
+				"url" : "/monitoring/system-info",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.server-log",
+				"url" : "/monitoring/server-log",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.statistic",
+				"url" : "/monitoring/statistic",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			},
+			{
+				"label" : "menu.monitoring.patch-info",
+				"url" : "/monitoring/patch-info",
+				"security": ["ROLE_MONITORING_READONLY", "ROLE_READONLY"]
+			}
+		]
+	},
+	{
+		"label" : "menu.console",
+		"url" : "/console",
+		"security": ["ROLE_CONSOLE"]
+	}
+]

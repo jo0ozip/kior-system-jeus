@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Built-By: TmaxSoft
+Jeus-Use-Graceful-Redeploy: true
+Created-By: Apache Maven 3.6.0
+Build-Jdk: 1.8.0_101
+

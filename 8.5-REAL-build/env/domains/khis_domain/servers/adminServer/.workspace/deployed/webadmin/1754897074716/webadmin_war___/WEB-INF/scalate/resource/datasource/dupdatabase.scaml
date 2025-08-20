@@ -1,0 +1,58 @@
+-@ val datasourceId: String
+-@ val action: String
+
+- import jeus.tool.webadmin.Settings
+
+- val concealPassword: Boolean = S.eval[Settings]("@settings").concealPassword
+- val choiceGroup = "choiceGroup_duplicate_" + datasourceId
+- J.base = "domain.resources.data-source"
+%article
+	%h2.title
+		= S.message("common.duplicate.label") + " [" + datasourceId + "]"
+	%p.description
+		= S.message("resources.datasource.database.duplicate.description")
+	%form(method="post" action='#{action}')
+		%input(type = "hidden" name = "_method" value = "put")
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".database.data-source-id", noBinding = true)
+					%input(name="Id")
+				- J.field(schema = ".database.export-name", noBinding = true, required = false)
+					%input(name="exportName")
+				- J.field(schema = ".database.port-number", noBinding = true, required = false)
+					%input(name="portNumber")
+				- J.field(schema = ".database.database-name", noBinding = true, required = false)
+					%input(name="databaseName")
+				- J.field(schema = ".database.user", noBinding = true, required = false)
+					%input(name="user")
+				- J.field(schema = ".database.password", noBinding = true, required = false)
+					- val buttonId = "button_" + J.newID
+					- val target = "password"
+					- if(concealPassword) 
+						%input(name="password" id=target type="password")
+					- else 
+						%input(name="password" id=target type="text")
+					- J.dialogWithFunction("button", Map("label" -> "message:common.input.button", "cssClass" -> "btn_type03", "btype" -> "button", "disabled" -> !hasLock, "dialogWidth" -> 390, "buttonId" -> buttonId))
+						- (dialogId: String) =>
+							.passwordDialog
+								.title.txt_title01
+									= S.message("common.password.title")
+								%form(action="#{contextPath}/password" method="post")
+									%select(name="algorithm" title='#{S.message("common.password.algorithm")}')
+										%option(value="") plain
+										%option(value="base64") base64
+										%option(value="DES") DES
+										%option(value="DESede") DESede
+										%option(value="AES") AES
+										%option(value="SEED") SEED
+										%option(value="Blowfish") Blowfish
+									%input(type="text" name="password" title='#{S.message("common.password.input")}')
+							- J.init
+								:&plain
+									require(["jeus/password"], function(password){
+										password('#{dialogId}', '##{target}');
+									});
+				- J.field(example = "name:type=value", noBinding = true, required = false, schema = ".database.property")
+					%textarea(name="property")
+	%p
+		= S.message("resources.datasource.database.duplicate.notice")

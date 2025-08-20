@@ -1,0 +1,20 @@
+- import jeus.tool.webadmin.history.History
+- import jeus.tool.webadmin.history.Historys
+
+- val runtime: String = attributeOrElse("__runtime", null)
+
+- if (!hasText(runtime))
+	%aside#history
+		%h1
+			= S.message("common.history.title")
+
+		%section
+			%h1
+				= S.message("common.historylist.title")
+			%ul
+				- S.eval[Historys]("@historys").reverse.foreach { history =>
+					%li
+						%a(href='#{contextPath}/#{if (history.url.startsWith("/")) history.url.substring(1) else history.url}')
+							= S.message(history.code, history.args)
+
+				- }

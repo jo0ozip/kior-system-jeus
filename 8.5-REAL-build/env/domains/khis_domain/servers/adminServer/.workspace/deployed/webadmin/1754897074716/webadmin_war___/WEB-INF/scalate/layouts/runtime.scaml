@@ -1,0 +1,12 @@
+-@ var body: String 
+
+- layout("/WEB-INF/scalate/layouts/base.scaml")
+	- J.header
+		%link(rel="text/css" rel="stylesheet" href="#{contextPath}/resources/less/runtime.css")
+
+	#mainLayout
+	
+		%div#contentArea(role="main")
+			!= body		
+	- J.init
+		require(["page/runtime"]);

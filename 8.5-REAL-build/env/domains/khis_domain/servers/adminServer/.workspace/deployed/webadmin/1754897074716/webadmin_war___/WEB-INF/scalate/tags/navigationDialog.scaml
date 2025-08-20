@@ -1,0 +1,34 @@
+- import jeus.tool.webadmin.Environment
+
+-@ val dialogId: String
+
+-@ val targetId: String
+
+-@ val multiple: Boolean = false
+
+-@ val append: Boolean = true
+
+- if(multiple)
+	.navigationDialog
+		.title.txt_title01
+			Navigation
+		%form
+			- J.render("navigation", Map("multiple" -> multiple))
+	- J.init
+		:&plain
+			require(["jeus/navigationDialog"], function(navigationDialog){
+				navigationDialog.initMulti("#{dialogId}", "#{targetId}");
+			});
+- else
+	- val hiddenId = "hidden_repositories_" + J.currentID
+	.navigationDialog
+		.title.txt_title01
+			Navigation
+		%form
+			%input(type="hidden" name="path" value='#{S.eval[Environment]("@j_env").jeusHome}' id="#{hiddenId}")
+			- J.render("navigation", Map("targetId" -> {"#" + hiddenId}, "multiple" -> multiple))
+	- J.init
+		:&plain
+			require(["jeus/navigationDialog"], function(navigationDialog){
+				navigationDialog.init("#{dialogId}", "#{targetId}", "#{hiddenId}", #{append});
+			});				

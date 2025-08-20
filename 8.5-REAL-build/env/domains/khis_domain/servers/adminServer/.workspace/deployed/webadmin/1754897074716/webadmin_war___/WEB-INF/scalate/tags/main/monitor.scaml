@@ -1,0 +1,20 @@
+- val status: Map[String, Int] = J.serverStatus
+
+- def monitor(code: String, key: String, index: Int)
+	- val count = status.getOrElse(key, 0)
+	- val total = status.getOrElse("TOTAL", 1)
+	%dt = S.message(code)
+	%dd = count
+	%dd.gr_bg
+		- val percent = count * 100 / total 
+		%span(style="width: #{percent}%;" class="gr_over#{index}") #{percent}%
+
+%aside#mainMonitor
+	%h1 = S.message("main.servers.info.title")
+	%dl
+		= monitor("main.servers.info.failed", S.message("level.FAILED"), 1)
+		= monitor("main.servers.info.standby", S.message("level.STANDBY"), 2)
+		= monitor("main.servers.info.running", S.message("level.RUNNING"), 3)
+		= monitor("main.servers.info.shutdown", S.message("level.SHUTDOWN"), 4)
+		= monitor("main.servers.info.suspended", S.message("level.SUSPENDED"), 5)
+		= monitor("main.servers.info.other", S.message("level.OTHER"), 6)

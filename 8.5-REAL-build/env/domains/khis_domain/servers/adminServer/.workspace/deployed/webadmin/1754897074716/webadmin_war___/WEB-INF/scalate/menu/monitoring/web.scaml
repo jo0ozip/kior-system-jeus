@@ -1,0 +1,12 @@
+-@ val selected: Int = 0
+-@ val disabled: Boolean = false
+
+%ul.tab01
+	-
+		J.render("tab", Map(
+			"items" -> List(
+				TabItem("/monitoring/web/statistics", "message:menu.monitoring.web.statistic"),
+				TabItem("/monitoring/web/listsession", "message:menu.monitoring.web.listsession")
+			),
+			"selected" -> selected
+		))

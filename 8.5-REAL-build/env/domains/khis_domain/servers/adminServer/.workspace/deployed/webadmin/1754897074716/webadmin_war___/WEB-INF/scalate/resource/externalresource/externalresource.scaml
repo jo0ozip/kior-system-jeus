@@ -1,0 +1,27 @@
+-@ val model: List[ExternalResourceType] = Nil
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:resources.external-resource.title"))
+	- J.base = "domain.resources.external-resource"
+	%h2.title
+		= J.title("message:resources.external-resource.title", J.base)
+
+	= Table.sortable(null, model, sortBy = {r: ExternalResourceType => r.getName})
+		- case 1 =>
+			- Item("message:header.name", "40%")
+				- (index, row) =>
+					- val url = J.buildUri("/resource/externalresource/{name}", row.getName)
+					%a(href="#{url}") = row.getName
+		- case 2 =>
+			- Item("message:header.class-name")
+				- (index, row) =>
+					= row.getClassName
+		- case 3 =>
+			- Item("90px", List("center"),
+				- Head
+					- () =>
+						- val url = J.buildUri("/resource/externalresource")
+						- J.render("formButton", Map("label" -> "message:common.add.button", "cssClass" -> "button bt_add", "name" -> "create", "disabled" -> !hasLock, "action" -> url))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/resource/externalresource/{name}", row.getName)
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "method" -> "delete", "cssClass" -> "button bt_del", "disabled" -> !hasLock, "action" -> url))

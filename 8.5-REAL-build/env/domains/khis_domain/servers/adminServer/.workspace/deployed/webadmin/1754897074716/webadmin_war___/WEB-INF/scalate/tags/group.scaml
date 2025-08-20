@@ -1,0 +1,30 @@
+- import jeus.tool.webadmin.Settings
+
+-@ val label: String
+-@ val description: String = null
+-@ val alert: String = null
+-@ val groupId: String = "group_" + J.newID
+
+- def custom(position: String)
+	- attributeOrElse[Any](position, null) match
+		- case tag: String =>
+			- J.render(tag, Map("id" -> groupId))
+		- case func: Function1[String, Unit] @unchecked =>
+			- func(groupId)
+		- case _ =>
+	- attributes(position) = null
+
+%section.group(id={groupId})
+	%header.groupHeader
+		- custom("front")
+		%h2
+			= label
+		- custom("tail")
+
+		- if(hasText(alert))
+			%p.alert
+				= alert			
+		- if(S.eval[Settings]("@settings").enableDescription)
+			%p.description
+				= description
+	- J.renderBody

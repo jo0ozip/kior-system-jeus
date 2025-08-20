@@ -1,0 +1,192 @@
+- import jeus.tool.webadmin.Environment
+- val jEnv = S.eval[Environment]("@j_env")
+
+-@ val allServers: List[String] = Nil
+-@ val allClusters: List[String] = Nil
+-@ val allVirtualHosts: List[String] = Nil
+-@ val allDependentLibraries: List[String] = Nil
+-@ val securityDomainNames: List[String] = Nil
+
+-@ val action: String = requestUri
+-@ val useInDialog: Boolean = false
+
+-@ val plans: List[String] = Nil
+
+- J.base = "domain.deployed-applications.deployed-application"
+%form(method="post" action="#{action}")
+	- J.render("fieldIcons")
+	- if(useInDialog)
+		.hidden
+		%input(type="hidden" name="deploy" value="deploy")
+		%input(type="hidden" name="installed" value="installed")
+	- else
+		- J.render("buttons", Map("useLock" -> false))
+
+	- J.layout("basic")
+		.table
+			- if(!useInDialog)
+				- J.field(schema = ".id", required = false, description = "message:applications.deploy.id.description")
+					- S.input()
+				- J.field(schema = ".path", description = "message:applications.deploy.path.description")
+					- val pathID = "path_" + J.newID
+					- S.textarea(attributes = Map("id" -> pathID))
+					- J.dialog("button", Map("label" -> "message:common.input.button", "cssClass" -> "btn_type03", "btype" -> "button"))
+						- J.render("navigationDialog", Map("targetId" -> pathID, "multiple" -> true))
+				- J.field(schema = ".type", required = false, path = "moduleType")
+					- S.select(options = List("", "EAR", "EJB", "WAR", "RAR", "CAR"))
+		- J.group(label = "message:applications.application.targets.label")
+			.table
+				- if(!jEnv.isCloud)
+					- J.field(schema = ".target-all-servers", path = "all", noBinding = useInDialog)
+						- if(useInDialog)
+							%input(type="checkbox" name="all" value="true")
+						- else
+							- S.checkbox()
+					- J.field(schema = ".exclude-domain-admin-server-when-targeting-all-servers", path = "exdas", noBinding = useInDialog)
+						- if(useInDialog)
+							%input(type="checkbox" name="exdas" value="true")
+						- else
+							- S.checkbox()
+					- J.field(schema = ".target-server", path = "servers", noBinding = useInDialog)
+						- if(allServers == Nil)
+							= S.message("common.noExist.entry")
+						- else
+							- if(useInDialog)
+								- allServers.foreach
+									- server =>
+										%label
+											%input(type="checkbox" name="servers" value="#{server}")
+											- J.render("printLabelFromServer", Map("name" -> server))
+										%br
+							- else
+								- S.checkboxesCustom(options = allServers)
+									- option: String =>
+										- J.render("printLabelFromServer", Map("name" -> option))
+					- J.field(schema = ".target-cluster", path = "clusters", noBinding = useInDialog)
+						- if(allClusters == Nil)
+							= S.message("common.noExist.entry")
+						- else
+							- if(useInDialog)
+								- allClusters.foreach
+									- cluster =>
+										%label
+											%input(type="checkbox" name="clusters" value="#{cluster}")
+											= cluster
+										%br
+							- else					
+								- S.checkboxes(options = allClusters)
+				- J.field(schema = ".target-server.virtual-host", path = "virtualHost", noBinding = useInDialog)
+					- if(useInDialog)
+						%select(name="virtualHost")
+							%option
+							- allVirtualHosts.foreach
+								- virtualHost =>
+									%option(value="#{virtualHost}") = virtualHost
+					- else				
+						- S.select(options = null :: allVirtualHosts)
+		- J.group(schema = ".dependent-libraries")
+			.table
+			- J.group(schema = ".dependent-library")
+				.table
+					= Table.render(null, allDependentLibraries)
+						- case 1 =>
+							- Item("message:header.id")
+								- (index, row) =>
+									= row.split("-version", 2)(0)
+						- case 2 =>
+							- Item("message:header.version")
+								- (index, row) =>
+									- val id = row.split("-version", 2)(0)
+									- val versions = row.split("-version", 2)(1).split("#")
+									- versions.foreach
+										- version =>
+											%label
+												%input(type="checkbox" name="dependentlib" value="#{id} # #{version}") = version	
+											%br/
+	- J.layout("advanced")
+		.table
+			- J.field(label = "message:applications.common.upgrade.label", description = "message:applications.deploy.upgrade.description", path = "upgrade", required = false, noBinding = useInDialog)
+				- if(useInDialog)
+					%input(type="checkbox" name="upgrade" value="true")
+				- else
+					- S.checkbox()
+			- J.field(label = "message:applications.deploy.onlyDistribute.label", description = "message:applications.deploy.onlyDistribute.description", path = "onlyDistribute", required = false, noBinding = useInDialog)
+				- if(useInDialog)
+					%input(type="checkbox" name="onlyDistribute" value="true")
+				- else
+					- S.checkbox()		
+			- J.field(label = "message:applications.common.concurrent.label", path = "concurrent", description = "message:applications.deploy.concurrent.description", noBinding = useInDialog)
+				- if(useInDialog)
+					%input(type="checkbox" name="concurrent" value="true")
+				- else
+					- S.checkbox()
+		- J.group(label = "message:applications.common.options.label")
+			.table
+				- J.field(schema = ".classloading", path = "classLoading", noBinding = useInDialog)
+					- val ISOLATED: String = S.message("level.ISOLATED")
+					- val SHARED: String = S.message("level.SHARED")
+					- if(useInDialog)
+						%select(name="classLoading")
+							- List("", ISOLATED, SHARED).foreach
+								- cl =>
+									%option(value="#{cl}") = cl
+					- else
+						- S.select(options = List("", ISOLATED, SHARED))
+				- J.field(schema = ".use-fast-deploy", path = "useFastDeploy", noBinding = useInDialog)
+					- if(useInDialog)
+						%input(type="checkbox" name="useFastDeploy" value="true")
+					- else
+						- S.checkbox()		
+				- J.field(schema = ".keep-generated", path = "keepGenerated", noBinding = useInDialog)
+					- if(useInDialog)
+						%input(type="checkbox" name="keepGenerated" value="true")
+					- else
+						- S.checkbox()		
+				- J.field(schema = ".shared", path = "shared", noBinding = useInDialog)
+					- if(useInDialog)
+						%input(type="checkbox" name="shared" value="true")
+					- else
+						- S.checkbox()
+				- J.field(label = "message:applications.deploy.options.staging.label", path = "staging", noBinding = useInDialog, description = "message:applications.deploy.options.staging")
+					- if(useInDialog)
+						%input(type="checkbox" name="staging" value="true")
+					- else
+						- S.checkbox()
+				- J.field(schema = ".security-domain-name", path = "securityDomainName", noBinding = useInDialog)
+					- if(useInDialog)
+						%select(name="securityDomainName")
+							%option
+							- securityDomainNames.foreach
+								- security =>
+									%option(value="#{security}") = security
+					- else
+						- S.select(options = null :: securityDomainNames)
+				- J.field(schema = ".auto-redeploy-interval", path = "autoRedeployInterval", noBinding = useInDialog)
+					- if(useInDialog)
+						%input(name="autoRedeployInterval")
+					- else
+						- S.input()
+					%span.unit = S.message("common.ms")
+				- J.field(schema = ".plan", path = "plan", noBinding = useInDialog)
+					- if(useInDialog)
+						%select(name="plan")
+							%option
+							- plans.foreach
+								- plan =>
+									%option(value="#{plan}") = plan
+					- else
+						- S.select(options = null :: plans)
+				- J.field(schema = ".context-path", path = "contextPath", noBinding = useInDialog)
+					- if(useInDialog)
+						%input(name="contextPath")
+					- else
+						- S.input()
+				- J.field(schema = ".node-java-context", path = "nodeJavaContext", required = false, noBinding = useInDialog)
+					- if(useInDialog)
+						%input(type="checkbox" name="nodeJavaContext" value="true")
+					- else
+						- S.checkbox()
+
+	- if(!useInDialog)
+		.lineBar
+		- J.render("buttons", Map("useLock" -> false))

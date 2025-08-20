@@ -1,0 +1,28 @@
+-@ val serverName: String
+-@ val model: List[SystemLoggingType]
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:servers.system-logging.title"))
+	- J.base = "domain.servers.server.system-logging"
+	- val isReadonly = if(isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 0, "second" -> 4))
+
+	%h2.title
+		= J.title("message:servers.system-logging.title", J.base)
+	= Table.render(null, model)
+		- case 1 =>
+			- Item("message:header.name")
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{server}/systemlogging/{name}", serverName, row.getName())
+					%a(href="#{url}") = row.getName()
+		- case 2 =>
+			- Item("90px", List("center"),
+				- Head
+					- () => 
+						- J.render("formButton", Map("label" -> "message:common.add.button", "name" -> "create", "cssClass" -> "bt_add", "disabled" -> {!hasLock || isReadonly}))
+			- )
+				- (index, row) =>
+					- val url = J.buildUri("/servers/{server}/systemlogging/{name}", serverName, row.getName())
+					- J.render("formButton", Map("label" -> "message:common.remove.button", "name" -> "delete", "method" -> "delete", "action" -> url, "cssClass" -> "bt_del", "disabled" -> {{!hasLock || isReadonly} || row.getName() == "jeus"}))

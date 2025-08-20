@@ -1,0 +1,49 @@
+
+
+-@ val isAutoed: Boolean = false
+
+- layout("/WEB-INF/scalate/layouts/main.scaml", Map("title" -> "message:servers.ejb-engine.title"))
+	- J.base = "domain.servers.server.ejb-engine"
+
+	- val isReadonly = if(isAutoed) true else false
+	- render("/WEB-INF/scalate/menu/server.scaml", Map("first" -> 2, "second" -> 2, "third" -> 0))
+
+	%form(method="post" action="#{requestUri}")
+
+		- J.render("fieldIcons")
+		- var basic = "disabledbasic"
+		- if(!isReadonly)
+			- J.render("buttons", Map("addition" -> List("delete")))
+			- basic = "basic"
+
+		- J.layout(basic)
+			.table
+				- J.field(schema = ".resolution")
+					- J.input()
+					%span.unit = S.message("common.ms")
+				- J.field(schema = ".use-dynamic-proxy-for-ejb2")
+					- J.checkbox()
+
+		- J.layout("advanced")
+			.table
+				- J.field(schema = ".enable-user-notify")
+					- J.checkbox()
+			- J.group(schema = ".invoke-http", noBinding = false, attributes = Map("tail" -> "checkboxForGroup"))
+				.table
+					- J.field(schema = ".url")
+						- J.input()
+					- J.field(schema = ".http-port")
+						- J.input()
+			- J.group(schema = ".async-service")
+				.table
+					- J.field(schema = ".thread-min")
+						- J.input()
+					- J.field(schema = ".thread-max")
+						- J.input()
+					- J.field(schema = ".access-timeout")
+						- J.input()
+						%span.unit = S.message("common.ms")
+
+		.lineBar
+		- if(!isReadonly)
+			- J.render("buttons", Map("addition" -> List("delete")))

@@ -1,0 +1,25 @@
+- layout("/WEB-INF/scalate/layouts/base.scaml")
+	- J.header
+		%link(rel="text/css" rel="stylesheet" href="#{contextPath}/resources/less/helpContent.css")
+	%header
+		%h1
+			= S.message("help.main.title")
+			%em = S.message("help.main.title.sub")
+		%p
+			= S.message("help.main.content.description")
+	.content
+		%a(href='#{S.message("help.main.content.faq.url")}' target="_blank" rel="noopener noreferrer")
+			%dl
+				%dt.faq = S.message("help.main.content.faq.title")
+				%dd
+					= S.message("help.main.content.faq.description")
+		%a(href='#{S.message("help.main.content.qna.url")}' target="_blank" rel="noopener noreferrer")
+			%dl
+				%dt.qna = S.message("help.main.content.qna.title")
+				%dd
+					= S.message("help.main.content.qna.description")
+		%a(href='#{S.message("help.main.content.download.url")}' target="_blank" rel="noopener noreferrer")
+			%dl
+				%dt.download = S.message("help.main.content.download.title")
+				%dd
+					= S.message("help.main.content.download.description")

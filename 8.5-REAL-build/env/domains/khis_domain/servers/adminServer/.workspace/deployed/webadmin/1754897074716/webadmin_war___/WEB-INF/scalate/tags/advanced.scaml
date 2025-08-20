@@ -1,0 +1,14 @@
+- import jeus.tool.webadmin.Settings
+-@ val body: String
+
+- val enableDescription = S.eval[Settings]("@settings").enableDescription
+%section.advanced
+	%h2
+		!= S.message("common.advanced.title")
+	- if (enableDescription)
+		%span.onoff
+			= S.message("common.open.all")
+	.content
+		!= body
+	- J.init
+		require(["jeus/advanced"]);

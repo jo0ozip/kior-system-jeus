@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<nodes xmlns="http://www.tmaxsoft.com/xml/ns/jeus">
+    <node>
+        <name>adminServer</name>
+        <host>jeus-admin</host>
+        <java>
+            <port>7730</port>
+            <use-ssl>false</use-ssl>
+        </java>
+    </node>
+</nodes>

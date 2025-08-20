@@ -1,0 +1,18 @@
+- layout("layouts/main.scaml", Map("title" -> "message:console.title", "description" -> "message:console.description", "help" -> "console"))
+	- J.header
+		%link(rel="text/css" rel="stylesheet" href="#{contextPath}/resources/less/console.css")
+
+	%section#console
+		%h1
+			= S.message("console.command.title")
+
+		%form(method="post" action="#{contextPath}/console")
+			%fieldset
+				%legend
+					= S.message("console.command.title")
+				%input(name="command" type="text" placeholder='#{S.message("console.command.input")}')
+				- J.render("button", Map("label" -> "message:console.run", "btype" -> "submit", "cssClass" -> "bt_l1"))
+		#result
+			%pre
+	- J.init
+		require(["page/console"]);

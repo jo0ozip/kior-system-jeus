@@ -1,0 +1,1 @@
+require(["jquery"],function(e){return e(document).ready(function(){return setTimeout(function(){return e("#curtain").hide()},200)})});

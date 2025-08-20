@@ -1,0 +1,1 @@
+define(["jquery"],function(e){return e("a, button, input[type=submit], input[type=button]").on("click",function(e){return e.preventDefault(),e.stopPropagation()})});

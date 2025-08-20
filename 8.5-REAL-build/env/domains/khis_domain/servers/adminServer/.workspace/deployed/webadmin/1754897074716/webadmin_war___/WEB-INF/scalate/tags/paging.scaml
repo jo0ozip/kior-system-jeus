@@ -1,0 +1,34 @@
+-@ val offset: Int = 1
+-@ val size: Int = 20
+-@ val last: Int = 1
+-@ val total: Int = 0
+-@ val maxPage: Int = 10
+
+%input(type="hidden" name="size" value="#{size}")
+
+- val page: Int = Math.ceil(total.toDouble / size).toInt
+- val current: Int = offset / size
+
+- val groups = 0 until page grouped(maxPage) toList
+- val group = groups find{group => group.head <= current && current <= group.last} getOrElse(groups.head)
+
+- 
+	def calPage(index: Int): String = {
+		(index * size + 1).toString
+	}
+
+.paging
+	- if (groups.head != group)
+		- J.render("button", Map("name" -> "offset", "bvalue" -> {calPage(group.head - 1)}, "label" -> "<<", "cssClass" -> "bt2"))
+
+	- group foreach
+		- index =>
+			- val value = calPage(index)
+			- if (current == index)
+				- J.render("button", Map("name" -> "offset", "bvalue" -> value, "label" -> (1 + index).toString, "cssClass" -> "bt2 selected"))
+			- else
+				- J.render("button", Map("name" -> "offset", "bvalue" -> value, "label" -> (1 + index).toString, "cssClass" -> "bt2"))
+
+	- if (groups.last != group)
+		- J.render("button", Map("name" -> "offset", "bvalue" -> {calPage(group.head + maxPage)}, "label" -> ">>", "cssClass" -> "bt2"))
+	%em = "[" + offset + " - " + last + " / Total : " + total + "]"

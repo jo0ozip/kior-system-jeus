@@ -1,0 +1,42 @@
+-@ val name: String
+-@ val action: String
+-@ val nodeNames: List[String] 
+
+- val choiceGroup = "choiceGroup_duplicate_" + name
+- J.base = "domain.servers"
+%article
+	%h2.title
+		= S.message("common.duplicate.label") + " [" + name + "]"
+	%p.description
+		= S.message("servers.duplicate.description")
+	%form(method="post" action='#{action}')
+		%input(type = "hidden" name = "_method" value = "put")
+		- J.layout("basic")
+			.table
+				- J.field(schema = ".server.node-name", noBinding = true)
+					%select(name="node")
+						%option
+						- nodeNames.foreach
+							- nodeName =>
+								%option(value="#{nodeName}") = nodeName
+			.table
+				- J.group(label = "message:servers.duplicate.single.label", path = "single", noBinding = false, attributes = Map("front" -> "choice", "choiceGroup" -> choiceGroup, "choiceDisabled" -> false, "checked" -> true))
+					.table
+						- J.field(schema = ".server.name", noBinding = true, required = false)
+							%input(name="name")
+					- J.group(schema = ".server.listeners.listener")
+						.table
+							- J.field(schema = ".listen-address", noBinding = true)
+								%input(name="address")
+							- J.field(schema = ".listen-port", noBinding = true)
+								%input(name="port")
+				- J.group(label = "message:servers.duplicate.multiple.label", path = "multiple", noBinding = false, attributes = Map("front" -> "choice", "choiceGroup" -> choiceGroup, "choiceDisabled" -> false, "checked" -> false))
+					.table
+						- J.field(label = "message:servers.duplicate.multiple.baseName.label", description = "message:servers.duplicate.multiple.baseName.description",  noBinding = true, required = false)
+							%input(name="baseName")
+						- J.field(label = "message:servers.duplicate.multiple.startNum.label", description = "message:servers.duplicate.multiple.startNum.description", noBinding = true, required = false)
+							%input(name="startNum")
+						- J.field(label = "message:servers.duplicate.multiple.numberOfServer.label", description = "message:servers.duplicate.multiple.numberOfServer.description", noBinding = true, required = false)
+							%input(name="numberOfServer" placeholder="1")
+						- J.field(label = "message:servers.duplicate.multiple.step.label", description = "message:servers.duplicate.multiple.step.description", noBinding = true, required = false)
+							%input(name="step" value="10")
