@@ -1,1 +1,0 @@
-startManagedServer -dasurl $DAS_URL -domain $DOMAIN_NAME -server server1 -u wasadmin -cachelogin -f $ENCODE_FILE

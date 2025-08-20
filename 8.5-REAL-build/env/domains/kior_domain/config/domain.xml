@@ -39,7 +39,7 @@
                 </credential-verification>
             </security-domain>
         </security-domains>
-    <ssecurity-manager>
+    </security-manager>
     <domain-log-home>%JEUS_LOG_HOME%</domain-log-home>
     <admin-server-name>%SERVICE_NAME%</admin-server-name>
     <enable-cwdp>false</enable-cwdp>
@@ -63,7 +63,7 @@
                 <base>BASE</base>
                 <listener>
                     <name>BASE</name>
-                    <listen-address>%ADDRESS%</listen-address>
+                    <listen-address>%HOST_NAME%</listen-address>
                     <listen-port>10000</listen-port>
                     <selectors>1</selectors>
                     <use-dual-selector>false</use-dual-selector>
@@ -74,7 +74,7 @@
                 <listener>
                     <name>http-server</name>
                     <listen-port>8080</listen-port>
-                    <listen-address>localhost</listen-address>
+                    <listen-address>%HOST_NAME%</listen-address>
                     <keep-alive-timeout>600000</keep-alive-timeout>
                 </listener>
             </listeners>
@@ -86,6 +86,7 @@
             <use-ejb-engine>false</use-ejb-engine>
             <use-jms-engine>false</use-jms-engine>
             <web-engine>
+<!--
                 <encoding>
                     <request-encoding>
                         <forced>%ENCODING%</forced>
@@ -97,6 +98,7 @@
                         <forced>%ENCODING%</forced>
                     </request-url-encoding>
                 </encoding>
+-->
                 <jsp-engine>
                     <check-included-jspfile>true</check-included-jspfile>
                     <keep-generated>true</keep-generated>

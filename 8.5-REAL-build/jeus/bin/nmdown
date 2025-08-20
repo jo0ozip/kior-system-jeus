@@ -1,1 +1,0 @@
-stopNodeManager -properties $JEUS_HOME/nodemanager/jeusnm.xml
