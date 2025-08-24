@@ -1,0 +1,24 @@
+FROM rockylinux93:base
+
+ENV USER_HOME=youOSuser_HOME
+ENV JAVA_HOME=youOSimage_JAVA_PATH
+ENV JEUS_HOME=your_JEUS_HOME
+ENV JEUS_LOG_HOME=your_JEUS_LOG_HOME
+ENV DOMAIN_NAME=kior_domain
+ENV PATH=${JAVA_HOME}/bin:${PATH}:${JEUS_HOME}/bin:${JEUS_HOME}/lib/system:$PATH
+
+COPY --chown=kior:kior env/.bash_profile/ ${USER_HOME}/
+COPY --chown=kior:kior env/.bashrc/       ${USER_HOME}/
+
+COPY --chown=kior:kior jeus/              ${JEUS_HOME}/
+COPY --chown=kior:kior env/license        ${JEUS_HOME}/license/
+COPY --chown=kior:kior env/bin/           ${JEUS_HOME}/bin/
+COPY --chown=kior:kior env/lib/           ${JEUS_HOME}/lib/
+
+
+RUN find /sw/jeus -type d -exec chmod 700 {} \; \
+ && find /sw/jeus -type f -exec chmod 600 {} \; \
+ && chmod u+x /sw/jeus/bin/*
+
+WORKDIR ${USER_HOME}
+USER kior

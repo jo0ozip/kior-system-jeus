@@ -1,0 +1,26 @@
+services:
+  admin:
+    image: tmaxsoft-jeus:v8.5
+    pull_policy: always
+    container_name: adminServer
+    hostname: adminServer
+    privileged: true
+    stdin_open: true
+    tty: true
+    cpus: "2.0"
+    mem_limit: "4g"
+    shm_size: "1g"
+    ports:
+      - "20000:10000"  # hostPort:containerPort
+    volumes:
+      - ../env/domains:${JEUS_HOME}/domains:rw
+      - ../LOG/adminServer:${JEUS_HOME}/logs:rw
+    entrypoint: ["${JEUS_HOME}/bin/jboot.sh"]
+    networks:
+      - tmaxsoft-network
+    restart: unless-stopped
+
+    #platform: linux/amd64
+networks:
+  tmaxsoft-network:
+    external: true

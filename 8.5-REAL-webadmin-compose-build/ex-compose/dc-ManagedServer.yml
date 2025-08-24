@@ -1,0 +1,22 @@
+services:
+  ms01:
+    image: test-app:latest
+    pull_policy: always
+    container_name: test
+    hostname: test
+    privileged: true
+    stdin_open: true
+    tty: true
+    cpus: "4.0"
+    volumes:
+      - ../LOG/node01:${JEUS_HOME}/logs:rw   # ← volumes 키 추가
+    entrypoint: ["${JEUS_HOME}/bin/nmboot.sh"] #SET
+    #entrypoint: ["${JEUS_HOME}/bin/msboot.sh"] #OP
+    networks:
+      - tmaxsoft-network
+    restart: unless-stopped
+
+    #platform: linux/amd64
+networks:
+  tmaxsoft-network:
+    external: true
