@@ -8,6 +8,8 @@ services:
     stdin_open: true
     tty: true
     cpus: "4.0"
+    ports:
+      - "28080:8080"  # hostPort:containerPort
     volumes:
       - ../LOG/node01:${JEUS_HOME}/logs:rw   # ← volumes 키 추가
     entrypoint: ["${JEUS_HOME}/bin/nmboot.sh"] #SET
