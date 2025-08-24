@@ -9,8 +9,7 @@ ENV JEUS_LOG_HOME=your_JEUS_LOG_HOME
 ENV DOMAIN_NAME=kior_domain
 ENV PATH=${JAVA_HOME}/bin:${PATH}:${JEUS_HOME}/bin:${JEUS_HOME}/lib/system:$PATH
 
-COPY --chown=kior:kior env/.bash_profile/ ${USER_HOME}/
-COPY --chown=kior:kior env/.bashrc/       ${USER_HOME}/
+COPY --chown=kior:kior env/.bash_profile  env/.bashrc ${USER_HOME}/
 
 COPY --chown=kior:kior jeus/              ${JEUS_HOME}/
 COPY --chown=kior:kior env/license        ${JEUS_HOME}/license/
