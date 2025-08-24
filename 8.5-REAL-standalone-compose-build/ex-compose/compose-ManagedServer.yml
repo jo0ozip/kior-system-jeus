@@ -1,23 +1,17 @@
 services:
-  node01:
+  server1:
     image: app-test:latest
     pull_policy: always
-    #entrypoint: ["start.sh"]
-    #tmpfs:
-    #  - ${JEUS_HOME}/domains/jeus_domain/servers:size=2g
     container_name: ManagedServer
     hostname: ManagedServer
-    platform: linux/amd64
     privileged: true
     stdin_open: true
     tty: true
     cpus: "4.0"
     mem_limit: "8g"
     shm_size: "2g"
-    ulimits:
-      nofile:
-        soft: 65536
-        hard: 65536
+    ports:
+      - "28080:8080"  # hostPort:containerPort
     environment:
       - JVM_OPT=-Xms2048m -Xmx2048m
     volumes:
@@ -25,6 +19,15 @@ services:
     networks:
       - tmaxsoft-network
     restart: unless-stopped
+
+    #entrypoint: ["start.sh"]
+    #tmpfs:
+    #  - ${JEUS_HOME}/domains/jeus_domain/servers:size=2g
+    #platform: linux/amd64
+    #ulimits:
+    #  nofile:
+    #    soft: 65536
+    #    hard: 65536
 
 networks:
   tmaxsoft-network:
