@@ -19,7 +19,7 @@ export PATH="${PATH}:${JEUS_HOME}/bin:${JEUS_HOME}/lib/system"
 # JEUS DomainAdminServer Set                         @TmaxSoft
 #=============================================================
 export DOMAIN_NAME=${DOMAIN_NAME}
-export DAS_HOSTNAME=`hostname`
+export DAS_HOSTNAME=adminServer
 export DAS_PORT=10000
 export DAS_URL=${DAS_HOSTNAME}:${DAS_PORT}
 export ENCODE_FILE=${JEUS_HOME}/bin/jeusEncode
