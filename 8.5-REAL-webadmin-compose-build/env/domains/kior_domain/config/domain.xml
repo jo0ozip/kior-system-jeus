@@ -31,7 +31,7 @@
                 <listener>
                     <name>BASE</name>
                     <listen-port>10000</listen-port>
-                    <listen-address>731db295a869</listen-address>
+                    <listen-address>adminServer</listen-address>
                 </listener>
             </listeners>
             <web-engine>

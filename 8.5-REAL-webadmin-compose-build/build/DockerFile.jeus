@@ -4,6 +4,8 @@ ENV USER_HOME=youOSuser_HOME
 ENV JAVA_HOME=youOSimage_JAVA_PATH
 ENV JEUS_HOME=your_JEUS_HOME
 ENV JEUS_LOG_HOME=your_JEUS_LOG_HOME
+
+#check for JEUS Engine and env/domains
 ENV DOMAIN_NAME=kior_domain
 ENV PATH=${JAVA_HOME}/bin:${PATH}:${JEUS_HOME}/bin:${JEUS_HOME}/lib/system:$PATH
 
@@ -16,9 +18,9 @@ COPY --chown=kior:kior env/bin/           ${JEUS_HOME}/bin/
 COPY --chown=kior:kior env/lib/           ${JEUS_HOME}/lib/
 
 
-RUN find /sw/jeus -type d -exec chmod 700 {} \; \
- && find /sw/jeus -type f -exec chmod 600 {} \; \
- && chmod u+x /sw/jeus/bin/*
+RUN find ${JEUS_HOME} -type d -exec chmod 700 {} \; \
+ && find ${JEUS_HOME} -type f -exec chmod 600 {} \; \
+ && chmod u+x ${JEUS_HOME}/bin/*
 
 WORKDIR ${USER_HOME}
 USER kior

@@ -23,4 +23,4 @@ else
     mv ${JEUS_HOME}/license/license_tri ${JEUS_HOME}/license/license
 fi
 
-startDomainServer -domain ${DOMAIN_NAME} -u wasadmin -cachelogin -f $ENCODE_FILE  --verbose
+startDomainAdminServer -domain ${DOMAIN_NAME} -u wasadmin -cachelogin -f $ENCODE_FILE  --verbose
