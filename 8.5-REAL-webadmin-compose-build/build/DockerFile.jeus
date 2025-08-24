@@ -7,7 +7,7 @@ ENV JEUS_LOG_HOME=your_JEUS_LOG_HOME
 
 #check for JEUS Engine and env/domains
 ENV DOMAIN_NAME=kior_domain
-ENV PATH=${JAVA_HOME}/bin:${PATH}:${JEUS_HOME}/bin:${JEUS_HOME}/lib/system:$PATH
+ENV PATH=${JAVA_HOME}/bin:${JEUS_HOME}/bin:${JEUS_HOME}/lib/system:${PATH}
 
 COPY --chown=kior:kior env/.bash_profile  env/.bashrc ${USER_HOME}/
 
