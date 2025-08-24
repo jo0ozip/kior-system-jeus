@@ -12,7 +12,7 @@ ENV PATH=${JAVA_HOME}/bin:${PATH}:${JEUS_HOME}/bin:${JEUS_HOME}/lib/system:$PATH
 COPY --chown=kior:kior env/.bash_profile  env/.bashrc ${USER_HOME}/
 
 COPY --chown=kior:kior jeus/              ${JEUS_HOME}/
-COPY --chown=kior:kior env/license        ${JEUS_HOME}/license/
+COPY --chown=kior:kior env/license/       ${JEUS_HOME}/license/
 COPY --chown=kior:kior env/bin/           ${JEUS_HOME}/bin/
 COPY --chown=kior:kior env/lib/           ${JEUS_HOME}/lib/
 
